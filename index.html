@@ -331,6 +331,21 @@ body { padding-block: 0 64px; }
 .rd .rd-hero .date i { color: var(--warn); }
 
 #home { display: grid; gap: 22px; }
+/* Simplificación: menos información a primera vista */
+.filters { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 10px; align-items: center; }
+.filters #q { width: 100%; font-size: 15px; padding: 10px 14px; border-radius: 999px; }
+.filters .type-chips { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; }
+.more-filters { grid-column: 1 / -1; }
+.more-filters summary { cursor: pointer; font: 600 13px var(--font-body); color: var(--muted); width: max-content; }
+.more-filters[open] summary { margin-bottom: 8px; }
+.more-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+@media (max-width: 520px) { .filters { grid-template-columns: 1fr auto; } .filters .count { display: none; } }
+.cards { grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); }
+.bib-body { padding: 10px 16px 8px; gap: 8px; }
+.bib-body:has(.tags:only-child) { padding-bottom: 4px; }
+.bib-foot .more { font: 600 13px var(--font-body); color: var(--c); filter: brightness(.85); }
+.to-cal { justify-self: start; font: 700 15px var(--font-body); color: var(--ink); text-decoration: none; background: var(--chip); padding: 10px 18px; border-radius: 999px; }
+.to-cal:hover { background: var(--line); }
 /* Versión pública: oculta lo que depende de Claude */
 .public .tabs a[data-view="corredores"], .public .tabs a[data-view="perfil"], .public:not(.has-form) .fb, .public .only-claude { display: none !important; }
 .fb-opts a { font: 500 14px var(--font-body); text-decoration: none; color: var(--ink); padding: 8px 10px; border-radius: 6px; display: flex; justify-content: space-between; }
@@ -419,13 +434,18 @@ footer p { margin: 0; }
   <header class="page-head">
     <div class="eyebrow" id="today"></div>
     <h1>Calendario de <span>carreras</span></h1>
-    <p class="lede">Carreras a pie, trail, triatlones (de sprint a Ironman) y HYROX. Cada ficha indica cuándo abren las inscripciones, cuándo es la prueba y de qué va. Pulsa una ficha para ver todos sus datos y marca con ★ las que te interesen.</p>
+    <p class="lede">Pulsa una carrera para ver todos sus datos. Marca con ★ las que te interesen.</p>
   </header>
 
 
   <div class="filters" role="group" aria-label="Filtros">
-    <div id="typeChips" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+    <input id="q" type="search" placeholder="Buscar prueba o ciudad" aria-label="Buscar">
     <button class="chip" id="favChip" aria-pressed="false">★ Mis carreras</button>
+    <span class="count" id="count"></span>
+    <div id="typeChips" class="type-chips"></div>
+    <details class="more-filters" id="moreFilters">
+    <summary>Más filtros</summary>
+    <div class="more-row">
     <select id="country" aria-label="País"></select>
     <select id="region" aria-label="Comunidad autónoma"></select>
     <select id="elev" aria-label="Desnivel">
@@ -437,9 +457,9 @@ footer p { margin: 0; }
       <option value="extremo">Extremo (&gt; 2.000 m)</option>
       <option value="nd">Sin dato de desnivel</option>
     </select>
-    <input id="q" type="search" placeholder="Buscar prueba o ciudad" aria-label="Buscar">
-    <label class="chip" style="display:inline-flex;gap:6px;align-items:center"><input type="checkbox" id="showPast" style="margin:0"> Pasadas</label>
-    <span class="count" id="count"></span>
+    <label class="chip" style="display:inline-flex;gap:6px;align-items:center"><input type="checkbox" id="showPast" style="margin:0"> Mostrar pasadas</label>
+    </div>
+    </details>
   </div>
 
   <main id="timeline"></main>
@@ -12686,12 +12706,14 @@ function renderHome() {
   const short = s => { const x = d(s); return `${x.getDate()} ${MON[x.getMonth()]}`; };
 
   const lead = top(live.filter(r => between(r.date, 0, 14)), 1)[0];
-  const weekend = byDate(live.filter(r => between(r.date, 0, 7)), "date").slice(0, 10);
-  const opening = byDate(RACES.filter(r => between(r.regOpen, 0, 45)), "regOpen").slice(0, 10);
-  const closing = byDate(RACES.filter(r => between(r.regClose, 0, 30) && days(r.date) >= 0), "regClose").slice(0, 8);
+  const weekendAll = live.filter(r => between(r.date, 0, 7));
+  const weekend = byDate(top([...weekendAll], 5), "date");
+  const openingAll = RACES.filter(r => between(r.regOpen, 0, 45));
+  const opening = byDate([...openingAll], "regOpen").slice(0, 5);
+  const closing = byDate(RACES.filter(r => between(r.regClose, 0, 30) && days(r.date) >= 0), "regClose").slice(0, 4);
   const lotteries = live.filter(r => r.lottery && r.regClose && days(r.regClose) >= 0 && (!r.regOpen || days(r.regOpen) <= 0));
   const month = byDate(top(live.filter(r => between(r.date, 8, 38)), 10), "date");
-  const news = [...NEWS].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 8);
+  const news = [...NEWS].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3);
   const feed = [];
   for (const [uid, p] of Object.entries(ME.profiles)) for (const [rid, e] of Object.entries(p?.races || {})) {
     const r = RACE[rid]; if (!r) continue;
@@ -12703,11 +12725,10 @@ function renderHome() {
     <section class="nl-hero">
       <small>Semana ${isoWeek(today)} · ${today.getDate()} ${MONTHS[today.getMonth()]} ${today.getFullYear()}</small>
       <h2>El boletín <span>del corredor</span></h2>
-      <p>Lo que se corre esta semana, las inscripciones que abren y cierran, los sorteos en marcha y las noticias de las pruebas del calendario.</p>
       <div class="nl-stats">
         <div><b>${live.length}</b><span>pruebas por delante</span></div>
-        <div><b>${weekend.length}</b><span>esta semana</span></div>
-        <div><b>${opening.length}</b><span>abren inscripción</span></div>
+        <div><b>${weekendAll.length}</b><span>esta semana</span></div>
+        <div><b>${openingAll.length}</b><span>abren inscripción</span></div>
         <div><b>${lotteries.length}</b><span>sorteos abiertos</span></div>
       </div>
       ${PUBLIC ? (() => {
@@ -12736,7 +12757,7 @@ function renderHome() {
           <h4>${esc(n.title)}</h4><p>${esc(n.body)}</p>
           ${/^https?:\/\//.test(n.source || "") ? `<a href="${esc(n.source)}" target="_blank" rel="noopener">Fuente: ${esc(n.source.replace(/^https?:\/\/(www\.)?/, "").split("/")[0])}</a>` : ""}
         </article>`).join(""), "Sin noticias esta semana.")}
-        ${sec("Se corre en las próximas semanas", "8 a 38 días", `<div class="nl-list">${month.map(r => item(r, short(r.date), `${esc(r.type)} · ${esc(r.city)} · ${inDays(days(r.date))}`)).join("")}</div>`, "Nada destacado.")}
+        <a class="to-cal" href="#calendario" data-goto="calendario">Ver el calendario completo →</a>
       </div>
       <aside class="nl-side">
         ${sec("Esta semana se corre", `${weekend.length}`, weekend.length ? `<div class="nl-list">${weekend.map(r => item(r, short(r.date), `${esc(r.type)} · ${esc(r.city)}`)).join("")}</div>` : "", "No hay pruebas en los próximos 7 días.")}
@@ -12748,6 +12769,8 @@ function renderHome() {
     </div>`;
 }
 document.getElementById("home").addEventListener("click", e => {
+  const g = e.target.closest("[data-goto]");
+  if (g) { e.preventDefault(); showView(g.dataset.goto); return; }
   const t = e.target.closest("[data-open]"); if (t && !e.target.closest("a")) openRace(t.dataset.open);
 });
 document.getElementById("home").addEventListener("keydown", e => {
@@ -12818,18 +12841,16 @@ function card(r) {
   return `<article style="${typeStyle(r)}" class="bib ${kindClass(r)} ${dd < 0 ? "past" : ""}" data-race="${esc(r.id)}">
     <div class="bib-top">
       <div class="date"><b>${x.getDate()}</b><span>${MON[x.getMonth()]}</span>${r.dateConfirmed ? "" : "<i>ESTIMADA</i>"}</div>
-      <div class="title"><h3>${esc(r.name)}</h3><div class="meta">${esc(r.city)}, ${esc(r.region || r.country)} ·${dd >= 0 ? inDays(dd) : "celebrada"}</div></div>
+      <div class="title"><h3>${esc(r.name)}</h3><div class="meta">${esc(r.city)} · ${dd >= 0 ? inDays(dd) : "celebrada"}</div></div>
       <button class="star" data-id="${esc(r.id)}" aria-pressed="${favs.has(r.id)}" aria-label="Marcar ${esc(r.name)}">★</button>
     </div>
     <div class="bib-body">
-      <div class="tags"><span class="tag type">${esc(r.type)}</span><span class="tag">${esc(r.distance)}</span>${r.elev != null ? `<span class="tag">D+ ${r.elev.toLocaleString("es-ES")} m</span>` : ""}${r.lottery ? '<span class="tag">Sorteo</span>' : ""}</div>
-      <p class="summary">${esc(r.summary)}</p>
+      <div class="tags"><span class="tag type">${esc(r.type)}</span>${r.elev != null ? `<span class="tag">D+ ${r.elev.toLocaleString("es-ES")} m</span>` : ""}</div>
       ${goingRow(r)}
     </div>
     <div class="bib-foot">
       <span class="status ${cls}">${label}</span>
-      ${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">Web oficial ↗</a>` : "<span></span>"}
-      ${reg.length ? `<span class="reginfo">${esc(reg.join(" · "))}</span>` : ""}
+      <span class="more">Ver ficha →</span>
     </div>
   </article>`;
 }
