@@ -331,6 +331,30 @@ body { padding-block: 0 64px; }
 .rd .rd-hero .date i { color: var(--warn); }
 
 #home { display: grid; gap: 22px; }
+/* Calendario por meses */
+.months { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
+.month-tile { display: grid; gap: 2px; text-align: left; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; cursor: pointer; box-shadow: var(--shadow); min-width: 0; }
+@media (prefers-reduced-motion: no-preference) { .month-tile { transition: transform .15s ease, box-shadow .15s ease; } }
+.month-tile:hover { transform: translateY(-2px); box-shadow: var(--shadow-h); }
+.month-tile:focus-visible { outline: 2px solid var(--tri); outline-offset: 2px; }
+.month-tile.now { border-color: var(--run); box-shadow: 0 0 0 1px var(--run), var(--shadow); }
+.mt-name { font: 800 30px/1 var(--font-display); text-transform: uppercase; }
+.mt-year { font: 600 12px var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.mt-count { font-weight: 600; margin-top: 8px; }
+.mt-dots { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.mt-dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
+.month-view { display: grid; gap: 16px; }
+.month-title { font: 800 clamp(34px, 6vw, 52px)/1 var(--font-display); text-transform: uppercase; margin: 0; }
+.month-title span { color: var(--muted); }
+.disc { display: flex; flex-wrap: wrap; gap: 8px; }
+.disc-btn { --c: var(--ink); display: inline-flex; align-items: center; gap: 6px; font: 600 14px var(--font-body); background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; cursor: pointer; }
+.disc-btn .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--c); }
+.disc-btn b { font: 700 12px var(--font-mono); color: var(--muted); }
+.disc-btn[aria-pressed="true"] { background: var(--c); border-color: var(--c); color: #fff; }
+.disc-btn[aria-pressed="true"] b, .disc-btn[aria-pressed="true"] .dot { color: #fff; background: transparent; }
+.disc-btn[aria-pressed="true"] .dot { box-shadow: inset 0 0 0 2px #fff; }
+.disc-btn:focus-visible { outline: 2px solid var(--tri); outline-offset: 2px; }
+
 /* Simplificación: menos información a primera vista */
 .filters { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 10px; align-items: center; }
 .filters #q { width: 100%; font-size: 15px; padding: 10px 14px; border-radius: 999px; }
@@ -442,7 +466,7 @@ footer p { margin: 0; }
     <input id="q" type="search" placeholder="Buscar prueba o ciudad" aria-label="Buscar">
     <button class="chip" id="favChip" aria-pressed="false">★ Mis carreras</button>
     <span class="count" id="count"></span>
-    <div id="typeChips" class="type-chips"></div>
+    <div id="typeChips" class="type-chips" hidden></div>
     <details class="more-filters" id="moreFilters">
     <summary>Más filtros</summary>
     <div class="more-row">
@@ -12394,7 +12418,7 @@ let favs = new Set();
 try { favs = new Set(JSON.parse(localStorage.getItem("favs") || "[]")); } catch {}
 const saveFavs = () => { try { localStorage.setItem("favs", JSON.stringify([...favs])); } catch {} };
 
-const state = { types: new Set(), fav: false, country: "", region: "", elev: "", q: "", past: false };
+const state = { types: new Set(), fav: false, country: "", region: "", elev: "", q: "", past: false, month: null, mtype: "" };
 
 // Desnivel en metros a partir del texto de detalles ("≈ 2.700 m D+", "Bici 1.900 m D+ · Carrera 150 m D+" -> suma)
 function elevM(r) {
@@ -12886,13 +12910,60 @@ function render() {
   ).sort((a,b) => d(a.date) - d(b.date));
   const groups = new Map();
   for (const r of list) { const x = d(r.date); const k = `${x.getFullYear()}-${x.getMonth()}`; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(r); }
-  document.getElementById("timeline").innerHTML = list.length ? [...groups].map(([k, rs]) => {
-    const [y, m] = k.split("-").map(Number);
-    return `<section class="month"><h2>${MONTHS[m]} ${y} <small>${rs.length} ${rs.length === 1 ? "prueba" : "pruebas"}</small></h2><div class="cards">${rs.map(card).join("")}</div></section>`;
-  }).join("") : `<p class="empty">Ninguna prueba coincide con los filtros.</p>`;
+  const tl = document.getElementById("timeline");
+  const plural = n => `${n} ${n === 1 ? "prueba" : "pruebas"}`;
   document.getElementById("count").textContent = `${list.length} de ${RACES.length}`;
-  alerts();
+
+  // Buscando o con "Mis carreras": resultados directos de todos los meses
+  if (q || state.fav) {
+    tl.innerHTML = list.length ? [...groups].map(([k, rs]) => {
+      const [y, m] = k.split("-").map(Number);
+      return `<section class="month"><h2>${MONTHS[m]} ${y} <small>${plural(rs.length)}</small></h2><div class="cards">${rs.map(card).join("")}</div></section>`;
+    }).join("") : `<p class="empty">Ninguna prueba coincide con la búsqueda.</p>`;
+    return;
+  }
+
+  // Dentro de un mes: elegir disciplina y ver sus pruebas
+  if (state.month && groups.has(state.month)) {
+    const [y, m] = state.month.split("-").map(Number);
+    const rs = groups.get(state.month);
+    const counts = TYPES.map(t => [t, rs.filter(r => r.type === t).length]).filter(([, n]) => n);
+    if (state.mtype && !counts.some(([t]) => t === state.mtype)) state.mtype = "";
+    const shown = state.mtype ? rs.filter(r => r.type === state.mtype) : rs;
+    tl.innerHTML = `<section class="month-view">
+      <button class="back" data-months>← Todos los meses</button>
+      <h2 class="month-title">${MONTHS[m]} <span>${y}</span></h2>
+      <div class="disc" role="group" aria-label="Disciplina">
+        <button class="disc-btn" data-mtype="" aria-pressed="${!state.mtype}">Todas <b>${rs.length}</b></button>
+        ${counts.map(([t, n]) => `<button class="disc-btn" data-mtype="${t}" aria-pressed="${state.mtype === t}" style="--c:${TYPE_COLOR[t]}"><span class="dot"></span>${t} <b>${n}</b></button>`).join("")}
+      </div>
+      <div class="cards">${shown.map(card).join("")}</div>
+    </section>`;
+    return;
+  }
+
+  // Vista inicial: un recuadro por mes
+  state.month = null;
+  tl.innerHTML = list.length ? `<div class="months">${[...groups].map(([k, rs]) => {
+    const [y, m] = k.split("-").map(Number);
+    const counts = TYPES.map(t => [t, rs.filter(r => r.type === t).length]).filter(([, n]) => n);
+    const isNow = y === today.getFullYear() && m === today.getMonth();
+    return `<button class="month-tile ${isNow ? "now" : ""}" data-month="${k}">
+      <span class="mt-name">${MONTHS[m]}</span>
+      <span class="mt-year">${y}${isNow ? " · este mes" : ""}</span>
+      <span class="mt-count">${plural(rs.length)}</span>
+      <span class="mt-dots">${counts.map(([t, n]) => `<i style="--c:${TYPE_COLOR[t]}" title="${t}: ${n}"></i>`).join("")}</span>
+    </button>`;
+  }).join("")}</div>` : `<p class="empty">Ninguna prueba coincide con los filtros.</p>`;
 }
+
+document.getElementById("timeline").addEventListener("click", e => {
+  const mt = e.target.closest("[data-month]");
+  if (mt) { state.month = mt.dataset.month; state.mtype = ""; render(); window.scrollTo(0, 0); return; }
+  if (e.target.closest("[data-months]")) { state.month = null; render(); return; }
+  const db = e.target.closest("[data-mtype]");
+  if (db) { state.mtype = db.dataset.mtype; render(); }
+});
 
 // Controles
 document.getElementById("today").textContent = `Hoy · ${today.getDate()} ${MONTHS[today.getMonth()]} ${today.getFullYear()}`;
@@ -12947,6 +13018,7 @@ document.querySelector(".appbar").addEventListener("click", e => {
   const a = e.target.closest("[data-view]"); if (!a) return;
   e.preventDefault();
   if (a.dataset.view === "perfil") viewPerson = null;
+  if (a.dataset.view === "calendario") { state.month = null; render(); }
   showView(a.dataset.view);
   try { history.replaceState(null, "", "#" + a.dataset.view); } catch {}
 });
