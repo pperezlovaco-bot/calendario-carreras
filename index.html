@@ -32072,7 +32072,7 @@ function tripHtml(r) {
   const fromMe = state.near && hasGeo ? km(state.near, r) : null;
   const nearby = hasGeo ? RACES.filter(o => o.id !== r.id && o.lat != null && Math.abs(days(o.date) - days(r.date)) <= 14 && km(r, o) <= 150)
     .sort((a, b) => a.date.localeCompare(b.date)).slice(0, 6) : [];
-  return `<section class="rd-sec trip"><h3>Modo viaje</h3>
+  return `<section class="rd-sec trip"><h3>✈️ Modo viaje</h3>
     <p class="note">Te vas a ${esc(r.city)}: llega el ${fmt(iso(before))} y vuelve el ${fmt(iso(after))}.${fromMe != null ? ` Está a ${kmTxt(fromMe)} de ${esc(state.near.label)}.` : ""}</p>
     <div class="trip-links">${links.map(([u, t]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${t}</a>`).join("")}</div>
     <div class="trip-near">
