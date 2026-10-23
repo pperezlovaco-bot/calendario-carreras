@@ -404,6 +404,32 @@ html, body { overflow-x: clip; }
 .trip-links a:hover { background: var(--line); }
 .trip-near { display: grid; gap: 6px; }
 
+/* Desplegables dentro del mes (aparecen según eliges) */
+.dd-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-start; }
+.dd { position: relative; }
+.dd-btn { display: inline-flex; align-items: center; gap: 8px; font: 500 14px var(--font-body); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 9px 14px; cursor: pointer; box-shadow: var(--shadow); max-width: 100%; }
+.dd-btn .dd-l { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; font-weight: 700; }
+.dd-btn b { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; }
+.dd-btn i { font-style: normal; color: var(--muted); font-size: 11px; }
+.dd-btn[aria-expanded="true"] { border-color: var(--ink); }
+.dd-btn:focus-visible { outline: 2px solid var(--tri); outline-offset: 2px; }
+@media (prefers-reduced-motion: no-preference) { .dd { animation: stepIn .2s ease; } @keyframes stepIn { from { transform: translateY(4px); opacity: .5; } } }
+.dd-pop { position: absolute; top: calc(100% + 6px); left: 0; z-index: 35; width: 290px; max-width: calc(100vw - 32px); background: #fff; border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 16px 40px rgba(16,24,40,.2); padding: 8px; display: grid; gap: 6px; }
+.dd-search { font: 500 14px var(--font-body); padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; width: 100%; color: var(--ink); background: var(--chip); }
+.dd-search:focus { outline: 2px solid var(--tri); outline-offset: 0; background: #fff; }
+.dd-list { list-style: none; margin: 0; padding: 0; max-height: 300px; overflow-y: auto; display: grid; gap: 1px; }
+.dd-opt { width: 100%; display: flex; align-items: center; gap: 8px; text-align: left; font: 500 14px var(--font-body); color: var(--ink); background: none; border: 0; border-radius: 8px; padding: 8px 10px; cursor: pointer; }
+.dd-opt span:not(.dot) { flex: 1; min-width: 0; }
+.dd-opt b { font: 600 12px var(--font-mono); color: var(--muted); }
+.dd-opt:hover { background: var(--chip); }
+.dd-opt[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.dd-opt[aria-pressed="true"] b { color: #fff; }
+.dd-opt.zero { color: var(--off); cursor: default; }
+.dd-opt.zero:hover { background: none; }
+.dd-opt .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--c); flex: none; }
+.dd-sep { font: 700 11px var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 8px 10px 2px; }
+.dd-pop:not(.searching) .only-search { display: none; }
+
 /* Paso a paso dentro del mes */
 .crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .crumbs .sep { color: var(--muted); }
@@ -31396,6 +31422,7 @@ const COMUNIDADES = ["Andalucía","Aragón","Asturias","Islas Baleares","Canaria
 const fullList = (names, tallied) => { const has = new Set(tallied.map(([v]) => v)); return [...tallied, ...names.filter(n => !has.has(n)).sort((a, b) => a.localeCompare(b, "es")).map(n => [n, 0])]; };
 const CONT_OF = Object.fromEntries(Object.entries(CONTINENT).flatMap(([c, l]) => l.map(p => [p, c])));
 const continentOf = r => CONT_OF[r.country] || "Otros";
+let ddOpen = null;   // desplegable abierto dentro del mes
 
 // Distancia en km entre dos puntos (haversine)
 function km(a, b) {
@@ -31849,7 +31876,7 @@ document.getElementById("home").addEventListener("submit", async e => {
   clearFilters();
   if (what) state.types = new Set([what]);
   if (dp.sel?.kind === "month") state.month = dp.sel.key;
-  Object.assign(state, { mcont: "*", mcountry: "*", mregion: "*", mtype: "*" });
+  Object.assign(state, { mcont: "", mcountry: "", mregion: "", mtype: "" });
   if (dp.sel?.kind === "day") { state.day = dp.sel.key; const x = d(dp.sel.key); state.month = `${x.getFullYear()}-${x.getMonth()}`; }
   if (where) {
     homeMsg("Buscando…");
@@ -31880,7 +31907,7 @@ document.getElementById("home").addEventListener("click", e => {
     if (k === "tri") state.types = new Set(["Sprint", "Olímpico", "Medio Ironman", "Ironman"]);
     else if (TYPES.includes(k)) state.types = new Set([k]);
     if (k === "weekend") { const x = today; state.month = `${x.getFullYear()}-${x.getMonth()}`; }
-    if (state.types.size) Object.assign(state, { mcont: "*", mcountry: "*", mregion: "*", mtype: "*" });
+    if (state.types.size) Object.assign(state, { mcont: "", mcountry: "", mregion: "", mtype: "" });
     render(); goCalendar(); return;
   }
   const g = e.target.closest("[data-goto]");
@@ -32084,56 +32111,51 @@ function render() {
   if (state.month && groups.has(state.month)) {
     const [y, m] = state.month.split("-").map(Number);
     const all = groups.get(state.month);
-    // Paso a paso: ¿dónde? (continente) → ¿qué país? → ¿qué comunidad? (España) → ¿qué disciplina? → carreras
-    // Valores: "" = aún no elegido · "*" = todos · otro = valor concreto
+    // Desplegables que aparecen según eliges: Dónde (continente, o país buscando) → País → Comunidad (España) → Disciplina
+    // Valores: "" = todos
     const tally = (arr, f) => { const m2 = new Map(); for (const r of arr) { const k = f(r); if (k) m2.set(k, (m2.get(k) || 0) + 1); } return [...m2].sort((a, b) => b[1] - a[1]); };
-    const real = v => v && v !== "*";
+    const norm = s => String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     const conts = tally(all, continentOf);
-    if (real(state.mcont) && !conts.some(([c]) => c === state.mcont)) Object.assign(state, { mcont: "", mcountry: "", mregion: "", mtype: "" });
-    const inCont = real(state.mcont) ? all.filter(r => continentOf(r) === state.mcont) : all;
+    if (state.mcont && !(state.mcont in CONTINENT) && !conts.some(([c]) => c === state.mcont)) Object.assign(state, { mcont: "", mcountry: "", mregion: "" });
+    const inCont = state.mcont ? all.filter(r => continentOf(r) === state.mcont) : all;
     const countries = tally(inCont, r => r.country);
-    if (real(state.mcountry) && !countries.some(([c]) => c === state.mcountry)) Object.assign(state, { mcountry: "", mregion: "", mtype: "" });
-    const inCountry = real(state.mcountry) ? inCont.filter(r => r.country === state.mcountry) : inCont;
+    const inCountry = state.mcountry ? inCont.filter(r => r.country === state.mcountry) : inCont;
     const regs = state.mcountry === "España" ? tally(inCountry, r => r.region) : [];
-    const needRegion = state.mcountry === "España";
-    if (real(state.mregion) && !regs.some(([c]) => c === state.mregion)) Object.assign(state, { mregion: "", mtype: "" });
-    const rs = real(state.mregion) ? inCountry.filter(r => r.region === state.mregion) : inCountry;
+    const rs = state.mregion ? inCountry.filter(r => r.region === state.mregion) : inCountry;
     const counts = TYPES.map(t => [t, rs.filter(r => r.type === t).length]).filter(([, n]) => n);
-    if (real(state.mtype) && !counts.some(([t]) => t === state.mtype)) state.mtype = "";
-    const shown = real(state.mtype) ? rs.filter(r => r.type === state.mtype) : rs;
+    if (state.mtype && !counts.some(([t]) => t === state.mtype)) state.mtype = "";
+    const shown = state.mtype ? rs.filter(r => r.type === state.mtype) : rs;
 
-    const step = !state.mcont ? "cont"
-      : (state.mcont !== "*" && !state.mcountry) ? "country"
-      : (needRegion && !state.mregion) ? "region"
-      : !state.mtype ? "type" : "done";
-    if (step === "type" && counts.length === 1) { state.mtype = counts[0][0]; return render(); }
-
-    const crumb = (level, txt) => `<button class="crumb" data-mback="${level}" title="Cambiar">${esc(txt)} <span aria-hidden="true">✕</span></button>`;
-    const crumbs = [
-      state.mcont && crumb("cont", state.mcont === "*" ? "Todo el mundo" : state.mcont),
-      real(state.mcountry) && crumb("country", state.mcountry),
-      state.mcountry === "*" && crumb("country", `Todo ${state.mcont}`),
-      state.mregion && needRegion && crumb("region", state.mregion === "*" ? "Toda España" : state.mregion),
-      state.mtype && crumb("type", state.mtype === "*" ? "Todas las disciplinas" : state.mtype)
-    ].filter(Boolean);
-    const choose = (q, level, allTxt, total, items, colored) => `<div class="step">
-      <h3>${q}</h3>
-      <div class="step-opts">
-        ${items.map(([v, n]) => `<button class="disc-btn big${n ? "" : " zero"}" data-mset="${level}" data-v="${esc(v)}"${n ? "" : " disabled"}${colored ? ` style="--c:${TYPE_COLOR[v]}"` : ""}>${colored ? '<span class="dot"></span>' : ""}${esc(v)} <b>${n}</b></button>`).join("")}
-        <button class="disc-btn big all" data-mset="${level}" data-v="*">${allTxt} <b>${total}</b></button>
-      </div>
+    const opt = (level, v, n, cur, label = v, extra = "", cls = "") => `<li class="${cls}"><button type="button" class="dd-opt${n ? "" : " zero"}" data-pick="${level}" data-v="${esc(v)}" ${n ? "" : "disabled"} data-s="${esc(norm(label))}" aria-pressed="${cur === v}">${extra}<span>${esc(label)}</span><b>${n}</b></button></li>`;
+    const dd = (id, label, value, list, ph) => `<div class="dd" data-dd="${id}">
+      <button type="button" class="dd-btn" data-ddtoggle="${id}" aria-expanded="${ddOpen === id}"><span class="dd-l">${label}</span><b>${esc(value)}</b><i aria-hidden="true">▾</i></button>
+      <div class="dd-pop" ${ddOpen === id ? "" : "hidden"}>${ph ? `<input class="dd-search" data-ddsearch placeholder="${ph}" autocomplete="off">` : ""}<ul class="dd-list">${list}</ul></div>
     </div>`;
-    const body = step === "cont" ? choose("¿Dónde?", "cont", "Todo el mundo", all.length, fullList(Object.keys(CONTINENT), conts.filter(([c]) => c !== "Otros")).concat(conts.filter(([c]) => c === "Otros")))
-      : step === "country" ? choose("¿Qué país?", "country", `Todo ${esc(state.mcont)}`, inCont.length, fullList(CONTINENT[state.mcont] || [], countries))
-      : step === "region" ? choose("¿Qué comunidad?", "region", "Toda España", inCountry.length, fullList(COMUNIDADES, regs))
-      : step === "type" ? choose("¿Qué disciplina?", "type", "Todas", rs.length, counts, true)
-      : `<p class="lvl-count">${plural(shown.length)}</p><div class="cards">${shown.map(card).join("")}</div>`;
+    const allCountries = tally(all, r => r.country);
+    const whereList = opt("cont", "", all.length, state.mcont, "Todo el mundo")
+      + fullList(Object.keys(CONTINENT), conts.filter(([c]) => c !== "Otros")).map(([c, n]) => opt("cont", c, n, state.mcont)).join("")
+      + `<li class="dd-sep only-search">Países</li>`
+      + fullList(Object.values(CONTINENT).flat(), allCountries).map(([c, n]) => opt("place", c, n, state.mcountry, c, "", "only-search")).join("");
+    const countryList = opt("country", "", inCont.length, state.mcountry, `Todo ${state.mcont}`)
+      + fullList(CONTINENT[state.mcont] || [], countries).map(([c, n]) => opt("country", c, n, state.mcountry)).join("");
+    const regionList = opt("region", "", inCountry.length, state.mregion, "Toda España")
+      + fullList(COMUNIDADES, regs).map(([c, n]) => opt("region", c, n, state.mregion)).join("");
+    const typeList = opt("type", "", rs.length, state.mtype, "Todas")
+      + counts.map(([t, n]) => opt("type", t, n, state.mtype, t, `<span class="dot" style="--c:${TYPE_COLOR[t]}"></span>`)).join("");
+
     tl.innerHTML = `<section class="month-view">
       <button class="back" data-months>← Todos los meses</button>
       <h2 class="month-title">${MONTHS[m]} <span>${y}</span></h2>
-      ${crumbs.length ? `<div class="crumbs">${crumbs.join('<span class="sep">›</span>')}</div>` : ""}
-      ${body}
+      <div class="dd-row">
+        ${dd("where", "📍 Dónde", state.mcont || "Todo el mundo", whereList, "Continente o país…")}
+        ${state.mcont && CONTINENT[state.mcont] ? dd("country", "País", state.mcountry || "Todos", countryList, "Buscar país…") : ""}
+        ${state.mcountry === "España" ? dd("region", "Comunidad", state.mregion || "Todas", regionList, "Buscar comunidad…") : ""}
+        ${dd("type", "Disciplina", state.mtype || "Todas", typeList)}
+      </div>
+      <p class="lvl-count">${plural(shown.length)}</p>
+      ${shown.length ? `<div class="cards">${shown.map(card).join("")}</div>` : `<p class="empty">No hay carreras con esta combinación.</p>`}
     </section>`;
+    if (ddOpen) document.querySelector(`.dd[data-dd="${ddOpen}"] .dd-search`)?.focus();
     return;
   }
 
@@ -32152,20 +32174,29 @@ function render() {
   }).join("")}</div>` : `<p class="empty">Ninguna prueba coincide con los filtros.</p>`;
 }
 
+document.getElementById("timeline").addEventListener("input", e => {
+  if (!e.target.matches("[data-ddsearch]")) return;
+  const q = e.target.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+  const pop = e.target.closest(".dd-pop");
+  pop.classList.toggle("searching", !!q);
+  pop.querySelectorAll("li").forEach(li => { const b = li.querySelector("[data-s]"); if (b) li.hidden = !!q && !b.dataset.s.includes(q); });
+});
+document.addEventListener("click", e => { if (ddOpen && !e.target.closest(".dd")) { ddOpen = null; render(); } });
 document.getElementById("timeline").addEventListener("click", e => {
   const mt = e.target.closest("[data-month]");
-  if (mt) { state.month = mt.dataset.month; Object.assign(state, { mcont: "", mcountry: "", mregion: "", mtype: "" }); render(); window.scrollTo(0, 0); return; }
-  const LEVELS = ["cont", "country", "region", "type"], KEY = { cont: "mcont", country: "mcountry", region: "mregion", type: "mtype" };
-  const ms = e.target.closest("[data-mset]");
-  if (ms) {
-    const i = LEVELS.indexOf(ms.dataset.mset);
-    state[KEY[LEVELS[i]]] = ms.dataset.v;
-    for (const l of LEVELS.slice(i + 1)) state[KEY[l]] = "";
-    if (ms.dataset.mset === "cont" && ms.dataset.v === "*") state.mcountry = "*";
-    render(); document.querySelector(".month-view")?.scrollIntoView({ block: "start" }); return;
+  if (mt) { state.month = mt.dataset.month; ddOpen = null; Object.assign(state, { mcont: "", mcountry: "", mregion: "", mtype: "" }); render(); window.scrollTo(0, 0); return; }
+  const tg = e.target.closest("[data-ddtoggle]");
+  if (tg) { ddOpen = ddOpen === tg.dataset.ddtoggle ? null : tg.dataset.ddtoggle; render(); return; }
+  const pk = e.target.closest("[data-pick]");
+  if (pk) {
+    const v = pk.dataset.v, lv = pk.dataset.pick;
+    if (lv === "cont") Object.assign(state, { mcont: v, mcountry: "", mregion: "" });
+    if (lv === "place") Object.assign(state, { mcont: CONT_OF[v] || "", mcountry: v, mregion: "" });
+    if (lv === "country") Object.assign(state, { mcountry: v, mregion: "" });
+    if (lv === "region") state.mregion = v;
+    if (lv === "type") state.mtype = v;
+    ddOpen = null; render(); return;
   }
-  const mb = e.target.closest("[data-mback]");
-  if (mb) { for (const l of LEVELS.slice(LEVELS.indexOf(mb.dataset.mback))) state[KEY[l]] = ""; render(); return; }
   if (e.target.closest("[data-months]")) { state.month = null; render(); return; }
   const db = e.target.closest("[data-mtype]");
   if (db) { state.mtype = db.dataset.mtype; render(); return; }
@@ -32241,7 +32272,7 @@ document.getElementById("q").addEventListener("input", e => { state.q = e.target
 // Ciudad -> coordenadas: primero entre las ciudades del calendario, si no en OpenStreetMap.
 // Devuelve {lat, lon}, null si no existe, o undefined si no se pudo consultar.
 async function geocodeCity(q) {
-  const norm = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+  const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
   const first = norm(q).split(/[\s,]/)[0];
   const local = RACES.find(r => r.lat != null && (norm(r.city) === norm(q) || norm(r.city).split(/[\s,(]/)[0] === first));
   if (local) return { lat: local.lat, lon: local.lon };
