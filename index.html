@@ -32075,10 +32075,6 @@ function tripHtml(r) {
   return `<section class="rd-sec trip"><h3>✈️ Modo viaje</h3>
     <p class="note">Te vas a ${esc(r.city)}: llega el ${fmt(iso(before))} y vuelve el ${fmt(iso(after))}.${fromMe != null ? ` Está a ${kmTxt(fromMe)} de ${esc(state.near.label)}.` : ""}</p>
     <div class="trip-links">${links.map(([u, t]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${t}</a>`).join("")}</div>
-    <div class="trip-near">
-      <small class="hint">Otras carreras a menos de 150 km, dos semanas antes o después</small>
-      ${nearby.length ? `<div class="nl-list">${nearby.map(o => item(o, `${d(o.date).getDate()} ${MON[d(o.date).getMonth()]}`, `${esc(o.type)} · ${esc(o.city)} · a ${kmTxt(km(r, o))}`)).join("")}</div>` : `<p class="hint">${hasGeo ? "No hay otras carreras cerca en esas fechas." : "Todavía no tenemos la ubicación exacta de esta prueba."}</p>`}
-    </div>
   </section>`;
 }
 
