@@ -51975,7 +51975,7 @@ document.addEventListener("click", e => { if (ddOpen && !e.target.closest(".dd")
 document.getElementById("timeline").addEventListener("click", e => {
   const mt = e.target.closest("[data-month]");
   if (mt) { state.month = mt.dataset.month; ddOpen = null; Object.assign(state, { mcont: "", mcountry: "", mregion: "", mtype: "" });
-    if (/^es/i.test(navigator.language || "") && RACES.some(r => { const x = d(r.date); return r.country === "España" && `${x.getFullYear()}-${x.getMonth()}` === mt.dataset.month; })) Object.assign(state, { mcont: "Europa", mcountry: "España" }); render(); window.scrollTo(0, 0); return; }
+    if ((/^es\b/i.test(navigator.language || "") || /^(Europe\/Madrid|Atlantic\/Canary|Africa\/Ceuta)$/.test(Intl.DateTimeFormat().resolvedOptions().timeZone || "")) && RACES.some(r => { const x = d(r.date); return r.country === "España" && `${x.getFullYear()}-${x.getMonth()}` === mt.dataset.month; })) Object.assign(state, { mcont: "Europa", mcountry: "España" }); render(); window.scrollTo(0, 0); return; }
   const tg = e.target.closest("[data-ddtoggle]");
   if (tg) { ddOpen = ddOpen === tg.dataset.ddtoggle ? null : tg.dataset.ddtoggle; render(); return; }
   if (e.target.closest("[data-ddback]")) { Object.assign(state, { mcont: "", mcountry: "", mregion: "" }); render(); return; }
