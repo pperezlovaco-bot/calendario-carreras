@@ -31385,7 +31385,7 @@ const FORM = { "formUrl": "https://docs.google.com/forms/d/e/1FAIpQLSe1zRFH3sd6T
 const AVISO = /*AVISO*/null; // formulario de Google "Avísame" (aviso por correo) en la versión pública
 if (PUBLIC) document.documentElement.classList.add("public");
 if (PUBLIC && FORM) document.documentElement.classList.add("has-form");
-const UPDATED = "23/10/2026";
+const UPDATED = "24/10/2026";
 
 const MONTHS = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
 const MON = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
@@ -31765,7 +31765,6 @@ function renderHome() {
 
   el.innerHTML = `
     <section class="nl-hero">
-      <small>${live.length} carreras, trails, triatlones y HYROX por delante</small>
       <h2>Encuentra tu <span>próxima carrera</span></h2>
       <form class="finder" id="finder">
         <label class="f-field"><span>Dónde</span>
@@ -31782,15 +31781,6 @@ function renderHome() {
         <button class="f-go" type="submit">Buscar</button>
       </form>
       <p class="f-msg" id="hMsg" role="status"></p>
-      <div class="quick">
-        <button type="button" data-quick="weekend">Este mes</button>
-        <button type="button" data-quick="near">📍 Cerca de mí</button>
-        <button type="button" data-quick="Maratón">Maratones</button>
-        <button type="button" data-quick="Media maratón">Medias maratones</button>
-        <button type="button" data-quick="Trail">Trail</button>
-        <button type="button" data-quick="tri">Triatlón</button>
-        <button type="button" data-quick="HYROX">HYROX</button>
-      </div>
       ${PUBLIC ? (() => {
         let ics = null;
         try { ics = /^https?:/.test(location.protocol) ? new URL("carreras.ics", location.href) : null; } catch {}
