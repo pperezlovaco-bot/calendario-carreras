@@ -527,6 +527,49 @@ li.has-sub .dd-opt b::after { content: " ›"; }
 .tag.series { background: #fff4d6; color: #8a6100; text-transform: none; letter-spacing: 0; }
 .rx-badge.series { background: #fff4d6; color: #8a6100; text-transform: none; letter-spacing: 0; }
 
+/* Lista compacta agrupada */
+.grp { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; }
+.grp + .grp { margin-top: 10px; }
+.grp summary { display: flex; align-items: center; gap: 10px; padding: 14px 16px; cursor: pointer; list-style: none; font: 700 17px var(--font-body); }
+.grp summary::-webkit-details-marker { display: none; }
+.grp summary::before { content: "›"; font-size: 20px; color: var(--muted); transition: transform .15s; width: 12px; }
+.grp[open] summary::before { transform: rotate(90deg); }
+.grp summary:hover { background: var(--chip); }
+.grp summary:focus-visible { outline: 2px solid var(--tri); outline-offset: -2px; }
+.g-name { flex: 1; min-width: 0; }
+.g-dots { display: flex; gap: 3px; }
+.g-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+.grp summary b { font: 700 13px var(--font-mono); background: var(--chip); border-radius: 999px; padding: 2px 10px; }
+.rows { list-style: none; margin: 0; padding: 0; }
+.grp .rows { border-top: 1px solid var(--line); }
+.row { display: grid; grid-template-columns: 48px minmax(0, 1fr) 150px 170px; gap: 12px; align-items: center; padding: 10px 16px; border-left: 4px solid var(--c); cursor: pointer; }
+.row + .row { border-top: 1px solid var(--line); }
+.row:hover { background: color-mix(in srgb, var(--c) 7%, #fff); }
+.row:focus-visible { outline: 2px solid var(--tri); outline-offset: -2px; }
+.r-date { display: grid; text-align: center; font: 600 11px var(--font-mono); text-transform: uppercase; color: var(--muted); line-height: 1.1; }
+.r-date b { font: 800 22px var(--font-display); color: var(--c); }
+.r-main { min-width: 0; display: grid; }
+.r-main b { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.r-main span { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.r-type { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; }
+.r-type .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--c); }
+.r-st { font-size: 11px; justify-self: end; }
+@media (max-width: 720px) {
+  .row { grid-template-columns: 44px minmax(0, 1fr); row-gap: 2px; }
+  .r-type, .r-st { grid-column: 2; justify-self: start; }
+  .r-type { display: none; }
+}
+.rows:not(.grp .rows) { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); }
+
+.featured { display: grid; gap: 10px; }
+.featured h3 { margin: 0; font: 800 22px var(--font-display); text-transform: uppercase; }
+.featured .cards { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.list-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }
+.sort { font-size: 13px; color: var(--muted); display: inline-flex; gap: 6px; align-items: center; }
+.sort select { border: 1px solid var(--line); border-radius: 10px; padding: 6px 8px; background: #fff; font: 600 13px var(--font-body); color: var(--ink); }
+.more-btn { display: block; width: 100%; border: 0; border-top: 1px solid var(--line); background: var(--chip); padding: 12px; font: 700 14px var(--font-body); color: var(--ink); cursor: pointer; }
+.more-btn:hover { background: var(--line); }
+
 /* Calendario por meses */
 .months { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
 .month-tile { display: grid; gap: 2px; text-align: left; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; cursor: pointer; box-shadow: var(--shadow); min-width: 0; }
@@ -51701,6 +51744,50 @@ function status(r) {
   return ["s-open", "Inscripción abierta"];
 }
 
+// Lista compacta: una línea por carrera, agrupada (comunidad / país) en bloques plegables
+const DOW_SHORT = ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"];
+const openGroups = new Set();
+const moreGroups = new Set();   // listas en las que se ha pulsado "Ver más"
+const PAGE = 50;
+function sortRaces(rs) {
+  const by = state.sort || "fecha";
+  const arr = [...rs];
+  if (by === "cerca" && state.near) return arr.sort((a, b) => (km(state.near, a) ?? 1e9) - (km(state.near, b) ?? 1e9));
+  if (by === "relevancia") return arr.sort((a, b) => score(b) + ((b.series || []).length * 3) - score(a) - ((a.series || []).length * 3) || a.date.localeCompare(b.date));
+  return arr.sort((a, b) => a.date.localeCompare(b.date) || a.name.localeCompare(b.name, "es"));
+}
+function rowsHtml(list, key) {
+  const all = moreGroups.has(key) || list.length <= PAGE;
+  const shownRows = all ? list : list.slice(0, PAGE);
+  return `<ol class="rows">${shownRows.map(row).join("")}</ol>${all ? "" : `<button class="more-btn" data-more="${esc(key)}">Ver las ${list.length - PAGE} restantes</button>`}`;
+}
+function row(r) {
+  const x = d(r.date), [cls, label] = status(r);
+  return `<li class="row" role="button" tabindex="0" data-race="${esc(r.id)}" style="${typeStyle(r)}">
+    <span class="r-date"><b>${x.getDate()}</b>${DOW_SHORT[x.getDay()]}</span>
+    <span class="r-main"><b>${esc(r.name)}</b><span>${esc(r.city)}${r.distance ? " · " + esc(r.distance) : ""}${r.dateConfirmed ? "" : " · fecha estimada"}</span></span>
+    <span class="r-type"><i class="dot"></i>${esc(r.type)}</span>
+    <span class="r-st status ${cls}">${label}</span>
+  </li>`;
+}
+function compactList(rs, groupBy, scope) {
+  if (!rs.length) return `<p class="empty">No hay carreras con esta combinación.</p>`;
+  const sorted = sortRaces(rs);
+  if (!groupBy) return rowsHtml(sorted, scope + "|*");
+  const g = new Map();
+  for (const r of sorted) { const k = groupBy(r) || "Otros"; if (!g.has(k)) g.set(k, []); g.get(k).push(r); }
+  const groups = [...g].sort((a, b) => b[1].length - a[1].length);
+  const single = groups.length === 1;
+  return groups.map(([k, list]) => {
+    const key = scope + "|" + k;
+    const types = [...new Set(list.map(r => r.type))];
+    return `<details class="grp" data-grp="${esc(key)}" ${single || openGroups.has(key) ? "open" : ""}>
+      <summary><span class="g-name">${esc(k)}</span><span class="g-dots">${types.map(t => `<i style="--c:${TYPE_COLOR[t]}" title="${t}"></i>`).join("")}</span><b>${list.length}</b></summary>
+      ${rowsHtml(list, key)}
+    </details>`;
+  }).join("");
+}
+
 function card(r) {
   const x = d(r.date), tri = TRI.has(r.type), trail = r.type === "Trail";
   const [cls, label] = status(r);
@@ -51772,7 +51859,7 @@ function render() {
   if (q || state.fav) {
     tl.innerHTML = list.length ? [...groups].map(([k, rs]) => {
       const [y, m] = k.split("-").map(Number);
-      return `<section class="month"><h2>${MONTHS[m]} ${y} <small>${plural(rs.length)}</small></h2><div class="cards">${rs.map(card).join("")}</div></section>`;
+      return `<section class="month"><h2>${MONTHS[m]} ${y} <small>${plural(rs.length)}</small></h2>${compactList(rs, null, k)}</section>`;
     }).join("") : `<p class="empty">Ninguna prueba coincide con la búsqueda.</p>`;
     return;
   }
@@ -51829,8 +51916,19 @@ function render() {
         ${state.mcountry === "España" ? dd("region", "Comunidad", state.mregion || "Todas", regionList, "Buscar comunidad…") : ""}
         ${dd("type", "Disciplina", state.mtype || "Todas", typeList)}
       </div>
-      <p class="lvl-count">${plural(shown.length)}</p>
-      ${shown.length ? `<div class="cards">${shown.map(card).join("")}</div>` : `<p class="empty">No hay carreras con esta combinación.</p>`}
+      ${shown.length > 12 ? (() => {
+        const top = [...shown].filter(r => (r.series || []).length || ["Maratón", "Ironman", "Medio Ironman"].includes(r.type))
+          .sort((a, b) => score(b) + (b.series || []).length * 3 - score(a) - (a.series || []).length * 3).slice(0, 4);
+        return top.length ? `<section class="featured"><h3>⭐ Destacadas del mes</h3><div class="cards">${top.map(card).join("")}</div></section>` : "";
+      })() : ""}
+      <div class="list-head"><p class="lvl-count">${plural(shown.length)}</p>
+        <label class="sort">Ordenar por <select id="sortSel">
+          <option value="fecha" ${(state.sort || "fecha") === "fecha" ? "selected" : ""}>Fecha</option>
+          <option value="relevancia" ${state.sort === "relevancia" ? "selected" : ""}>Relevancia</option>
+          <option value="cerca" ${state.sort === "cerca" ? "selected" : ""} ${state.near ? "" : "disabled"}>Cercanía${state.near ? "" : " (activa «Cerca de mí»)"}</option>
+        </select></label>
+      </div>
+      ${compactList(shown, state.mregion ? null : state.mcountry === "España" ? (r => r.region) : state.mcountry ? (r => r.city) : (r => r.country), state.month + "|" + state.mcont + "|" + state.mcountry)}
     </section>`;
     if (ddOpen) document.querySelector(`.dd[data-dd="${ddOpen}"] .dd-search`)?.focus();
     return;
@@ -51851,6 +51949,21 @@ function render() {
   }).join("")}</div>` : `<p class="empty">Ninguna prueba coincide con los filtros.</p>`;
 }
 
+document.getElementById("timeline").addEventListener("click", e => {
+  const mb = e.target.closest("[data-more]");
+  if (mb) { moreGroups.add(mb.dataset.more); render(); }
+});
+document.getElementById("timeline").addEventListener("change", e => {
+  if (e.target.id === "sortSel") { state.sort = e.target.value; render(); }
+});
+document.getElementById("timeline").addEventListener("keydown", e => {
+  const rw = e.target.closest(".row[data-race]");
+  if (rw && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openRace(rw.dataset.race); }
+});
+document.getElementById("timeline").addEventListener("toggle", e => {
+  const g = e.target.closest?.("details[data-grp]"); if (!g) return;
+  g.open ? openGroups.add(g.dataset.grp) : openGroups.delete(g.dataset.grp);
+}, true);
 document.getElementById("timeline").addEventListener("input", e => {
   if (!e.target.matches("[data-ddsearch]")) return;
   const q = e.target.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
@@ -51861,7 +51974,8 @@ document.getElementById("timeline").addEventListener("input", e => {
 document.addEventListener("click", e => { if (ddOpen && !e.target.closest(".dd")) { ddOpen = null; render(); } });
 document.getElementById("timeline").addEventListener("click", e => {
   const mt = e.target.closest("[data-month]");
-  if (mt) { state.month = mt.dataset.month; ddOpen = null; Object.assign(state, { mcont: "", mcountry: "", mregion: "", mtype: "" }); render(); window.scrollTo(0, 0); return; }
+  if (mt) { state.month = mt.dataset.month; ddOpen = null; Object.assign(state, { mcont: "", mcountry: "", mregion: "", mtype: "" });
+    if (/^es/i.test(navigator.language || "") && RACES.some(r => { const x = d(r.date); return r.country === "España" && `${x.getFullYear()}-${x.getMonth()}` === mt.dataset.month; })) Object.assign(state, { mcont: "Europa", mcountry: "España" }); render(); window.scrollTo(0, 0); return; }
   const tg = e.target.closest("[data-ddtoggle]");
   if (tg) { ddOpen = ddOpen === tg.dataset.ddtoggle ? null : tg.dataset.ddtoggle; render(); return; }
   if (e.target.closest("[data-ddback]")) { Object.assign(state, { mcont: "", mcountry: "", mregion: "" }); render(); return; }
@@ -52028,7 +52142,7 @@ document.getElementById("timeline").addEventListener("click", e => {
   const b = e.target.closest(".go-btn");
   if (b) { toggleGo(b); return; }
   if (e.target.closest("a, button, input, label")) return;
-  const card = e.target.closest(".bib[data-race]");
+  const card = e.target.closest(".bib[data-race], .row[data-race]");
   if (card) openRace(card.dataset.race);
 });
 document.getElementById("raceDetail").addEventListener("click", e => {
