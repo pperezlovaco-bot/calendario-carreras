@@ -524,6 +524,9 @@ li.has-sub .dd-opt b::after { content: " ›"; }
 .rx-tips i { font-style: normal; font-size: 18px; }
 .rx-grid .trip { grid-column: 1 / -1; }
 
+.tag.series { background: #fff4d6; color: #8a6100; text-transform: none; letter-spacing: 0; }
+.rx-badge.series { background: #fff4d6; color: #8a6100; text-transform: none; letter-spacing: 0; }
+
 /* Calendario por meses */
 .months { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
 .month-tile { display: grid; gap: 2px; text-align: left; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; cursor: pointer; box-shadow: var(--shadow); min-width: 0; }
@@ -695,6 +698,7 @@ footer p { margin: 0; }
     <div class="more-row">
     <select id="country" aria-label="País"></select>
     <select id="region" aria-label="Comunidad autónoma" hidden></select>
+    <select id="seriesSel" aria-label="Circuito o serie"></select>
     <select id="elev" aria-label="Desnivel">
       <option value="">Cualquier desnivel</option>
       <option value="llano">Llano (≤ 100 m D+)</option>
@@ -941,7 +945,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 43.263,
-  "lon": -2.935
+  "lon": -2.935,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "media-maraton-barcelona-2026",
@@ -1000,7 +1007,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 37.3886,
-  "lon": -5.9953
+  "lon": -5.9953,
+  "series": [
+   "Zurich Maratón"
+  ]
  },
  {
   "id": "marato-bp-castello-2026",
@@ -1176,7 +1186,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 35.6769,
-  "lon": 139.7639
+  "lon": 139.7639,
+  "series": [
+   "Abbott World Marathon Majors"
+  ]
  },
  {
   "id": "transgrancanaria-2026",
@@ -1265,7 +1278,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 38.7078,
-  "lon": -9.1366
+  "lon": -9.1366,
+  "series": [
+   "SuperHalfs"
+  ]
  },
  {
   "id": "semi-de-paris-2026",
@@ -1445,7 +1461,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 41.3826,
-  "lon": 2.1771
+  "lon": 2.1771,
+  "series": [
+   "Zurich Maratón"
+  ]
  },
  {
   "id": "medio-maraton-madrid-2026",
@@ -1540,7 +1559,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 50.0875,
-  "lon": 14.4213
+  "lon": 14.4213,
+  "series": [
+   "SuperHalfs"
+  ]
  },
  {
   "id": "berlin-half-marathon-2026",
@@ -1572,7 +1594,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 52.5174,
-  "lon": 13.3951
+  "lon": 13.3951,
+  "series": [
+   "SuperHalfs"
+  ]
  },
  {
   "id": "brighton-marathon-2026",
@@ -1785,7 +1810,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 36.7648,
-  "lon": -4.4422
+  "lon": -4.4422,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "challenge-mogan-2026",
@@ -1815,7 +1843,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 28.1074,
-  "lon": -15.5627
+  "lon": -15.5627,
+  "series": [
+   "Challenge Family"
+  ]
  },
  {
   "id": "penyagolosa-trails-2026",
@@ -1877,7 +1908,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 39.4697,
-  "lon": -0.3763
+  "lon": -0.3763,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "vienna-city-marathon-2026",
@@ -1939,7 +1973,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 42.3588,
-  "lon": -71.0578
+  "lon": -71.0578,
+  "series": [
+   "Abbott World Marathon Majors"
+  ]
  },
  {
   "id": "hamburg-marathon-2026",
@@ -2001,7 +2038,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 40.4168,
-  "lon": -3.7035
+  "lon": -3.7035,
+  "series": [
+   "Rock 'n' Roll Running Series"
+  ]
  },
  {
   "id": "maraton-londres-2026",
@@ -2032,7 +2072,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 51.5074,
-  "lon": -0.1278
+  "lon": -0.1278,
+  "series": [
+   "Abbott World Marathon Majors"
+  ]
  },
  {
   "id": "half-triathlon-sevilla-2026",
@@ -2123,7 +2166,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 39.81,
-  "lon": 3.2183
+  "lon": 3.2183,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "transvulcania-2026",
@@ -2185,7 +2231,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 41.0768,
-  "lon": 1.144
+  "lon": 1.144,
+  "series": [
+   "Challenge Family"
+  ]
  },
  {
   "id": "copenhagen-marathon-2026",
@@ -2277,7 +2326,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 41.3826,
-  "lon": 2.1771
+  "lon": 2.1771,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "zegama-aizkorri-2026",
@@ -2370,7 +2422,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 28.9204,
-  "lon": -13.6507
+  "lon": -13.6507,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "stockholm-marathon-2026",
@@ -2495,7 +2550,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 53.5502,
-  "lon": 10.0013
+  "lon": 10.0013,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "ironman-frankfurt-2026",
@@ -2526,7 +2584,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 50.1106,
-  "lon": 8.6821
+  "lon": 8.6821,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "ironman-nice-2026",
@@ -2557,7 +2618,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 43.7009,
-  "lon": 7.2684
+  "lon": 7.2684,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "challenge-roth-2026",
@@ -2588,7 +2652,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 49.1953,
-  "lon": 11.0567
+  "lon": 11.0567,
+  "series": [
+   "Challenge Family"
+  ]
  },
  {
   "id": "ironman-703-vitoria-2026",
@@ -2619,7 +2686,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 42.8506,
-  "lon": -2.6614
+  "lon": -2.6614,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "ironman-vitoria-2026",
@@ -2649,7 +2719,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 42.8506,
-  "lon": -2.6614
+  "lon": -2.6614,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "utmb-2026",
@@ -2681,7 +2754,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 45.9231,
-  "lon": 6.87
+  "lon": 6.87,
+  "series": [
+   "UTMB World Series"
+  ]
  },
  {
   "id": "sydney-marathon-2026",
@@ -2713,7 +2789,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": -33.8698,
-  "lon": 151.2083
+  "lon": 151.2083,
+  "series": [
+   "Abbott World Marathon Majors"
+  ]
  },
  {
   "id": "hyrox-tenerife-2026-09",
@@ -2743,7 +2822,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 28.4672,
-  "lon": -16.2508
+  "lon": -16.2508,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "big-half-london-2026",
@@ -2891,7 +2973,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 52.5174,
-  "lon": 13.3951
+  "lon": 13.3951,
+  "series": [
+   "Abbott World Marathon Majors"
+  ]
  },
  {
   "id": "media-maraton-valladolid-2026",
@@ -2978,7 +3063,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 41.6133,
-  "lon": 2.6576
+  "lon": 2.6576,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "maraton-logrono-2026",
@@ -3091,7 +3179,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 41.8756,
-  "lon": -87.6244
+  "lon": -87.6244,
+  "series": [
+   "Abbott World Marathon Majors"
+  ]
  },
  {
   "id": "hyrox-valencia-2026-10",
@@ -3122,7 +3213,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 39.4697,
-  "lon": -0.3763
+  "lon": -0.3763,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "challenge-peguera-mallorca-2026",
@@ -3153,7 +3247,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 42.1602,
-  "lon": 1.772
+  "lon": 1.772,
+  "series": [
+   "Challenge Family"
+  ]
  },
  {
   "id": "ironman-703-cascais-2026",
@@ -3184,7 +3281,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 38.6969,
-  "lon": -9.4204
+  "lon": -9.4204,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "bilbao-night-running-fest-2026",
@@ -3243,7 +3343,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 36.7648,
-  "lon": -4.4422
+  "lon": -4.4422,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "amsterdam-marathon-2026",
@@ -3869,7 +3972,10 @@ const RACES = [
   "url": "https://www.timingsys.com/event/772",
   "summary": "XIV edición, salida y meta en la Plaza de la Constitución; dos vueltas por la Hoz del Júcar y la pasarela del Recreo Peral. Incluye 10K y forma parte del Circuito de Carreras Populares de la Diputación de Cuenca.",
   "lat": 40.0661,
-  "lon": -2.1314
+  "lon": -2.1314,
+  "series": [
+   "Circuito de Carreras Populares de la Diputación de Cuenca"
+  ]
  },
  {
   "id": "ocean-lava-lanzarote-2026",
@@ -4184,7 +4290,10 @@ const RACES = [
   "url": "https://www.clm24.es/articulo/deportes/circuito-carreras-ciudad-real-2026-calendario-19-pruebas/20260202210158470184.html",
   "summary": "10K urbano puntuable para el Circuito de Ciudad Real.",
   "lat": 39.2834,
-  "lon": -2.7905
+  "lon": -2.7905,
+  "series": [
+   "Circuito de Carreras de Ciudad Real"
+  ]
  },
  {
   "id": "10k-zaragoza-2026",
@@ -4913,7 +5022,10 @@ const RACES = [
   "url": "https://www.challengefamily.com/races/",
   "summary": "Media distancia de final de temporada en el resort Forte Village, al sur de Cerdeña, con natación en el Mediterráneo y ciclismo por la costa sur. Clima suave en octubre.",
   "lat": 38.9581,
-  "lon": 8.9593
+  "lon": 8.9593,
+  "series": [
+   "Challenge Family"
+  ]
  },
  {
   "id": "cross-rio-tarafa-2026",
@@ -5329,7 +5441,10 @@ const RACES = [
   "url": "https://carreraspopulares.com/carrera/medio-maraton-valencia",
   "summary": "Una de las medias maratones más rápidas del mundo, por un recorrido llano por Valencia.",
   "lat": 39.4697,
-  "lon": -0.3763
+  "lon": -0.3763,
+  "series": [
+   "SuperHalfs"
+  ]
  },
  {
   "id": "millas-ilipense-2026",
@@ -5986,7 +6101,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 53.5502,
-  "lon": 10.0013
+  "lon": 10.0013,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "carrera-nocturna-los-lagos-2026",
@@ -6028,7 +6146,10 @@ const RACES = [
   "url": "https://kullamannen.utmb.world",
   "summary": "Ultra nocturno por la costa de Skåne y la península de Kullaberg (30-31 oct 2026), con acantilados, bosques y mucha noche otoñal. Major de las UTMB World Series.",
   "lat": 56.2827,
-  "lon": 12.4983
+  "lon": 12.4983,
+  "series": [
+   "UTMB World Series"
+  ]
  },
  {
   "id": "mallorca-by-utmb-2026",
@@ -6049,7 +6170,10 @@ const RACES = [
   "url": "https://mallorca.utmb.world",
   "summary": "Evento UTMB World Series del 30 oct al 1 nov 2026 por la Serra de Tramuntana, Patrimonio de la Humanidad, con senderos técnicos de piedra y vistas al mar.",
   "lat": 39.6535,
-  "lon": 2.481
+  "lon": 2.481,
+  "series": [
+   "UTMB World Series"
+  ]
  },
  {
   "id": "ultra-de-los-castillos-2026",
@@ -7180,7 +7304,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 40.7127,
-  "lon": -74.006
+  "lon": -74.006,
+  "series": [
+   "Abbott World Marathon Majors"
+  ]
  },
  {
   "id": "trail-castillo-anzur-2026",
@@ -8083,7 +8210,10 @@ const RACES = [
   "url": "https://running.life/running-calendar/spain/castilla-leon",
   "summary": "Competición de fitness tipo HYROX en Valladolid.",
   "lat": 41.62,
-  "lon": -4.726
+  "lon": -4.726,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "las-mil-zancadas-de-ledana-2026",
@@ -8125,7 +8255,10 @@ const RACES = [
   "url": "https://carrerasclm.es/carrera",
   "summary": "Trail por la sierra de Puertollano, prueba de la Copa CLM.",
   "lat": 38.6852,
-  "lon": -4.1112
+  "lon": -4.1112,
+  "series": [
+   "Copa CLM"
+  ]
  },
  {
   "id": "10k-antonio-serrano-la-solana-2026",
@@ -8146,7 +8279,10 @@ const RACES = [
   "url": "https://www.clm24.es/articulo/deportes/circuito-carreras-ciudad-real-2026-calendario-19-pruebas/20260202210158470184.html",
   "summary": "10K del Circuito de Carreras de Ciudad Real.",
   "lat": 38.9419,
-  "lon": -3.2365
+  "lon": -3.2365,
+  "series": [
+   "Circuito de Carreras de Ciudad Real"
+  ]
  },
  {
   "id": "10k-castello-de-la-plana-2026",
@@ -9588,7 +9724,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 41.3826,
-  "lon": 2.1771
+  "lon": 2.1771,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "hyrox-dublin-2026-11",
@@ -9618,7 +9757,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 53.3494,
-  "lon": -6.2606
+  "lon": -6.2606,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "costa-blanca-trails-2026",
@@ -13130,7 +13272,10 @@ const RACES = [
   "url": "https://www.clm24.es/articulo/deportes/circuito-carreras-ciudad-real-2026-calendario-19-pruebas/20260202210158470184.html",
   "summary": "Media maratón rural del Circuito de Ciudad Real.",
   "lat": 38.9648,
-  "lon": -3.8899
+  "lon": -3.8899,
+  "series": [
+   "Circuito de Carreras de Ciudad Real"
+  ]
  },
  {
   "id": "milano21-2026",
@@ -13592,7 +13737,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 43.3224,
-  "lon": -1.9839
+  "lon": -1.9839,
+  "series": [
+   "Zurich Maratón"
+  ]
  },
  {
   "id": "10k-dulces-de-casinos-2026",
@@ -13907,7 +14055,10 @@ const RACES = [
   "url": "https://www.clm24.es/articulo/deportes/circuito-carreras-ciudad-real-2026-calendario-19-pruebas/20260202210158470184.html",
   "summary": "10K del Circuito de Carreras de Ciudad Real.",
   "lat": 39.4061,
-  "lon": -2.9474
+  "lon": -2.9474,
+  "series": [
+   "Circuito de Carreras de Ciudad Real"
+  ]
  },
  {
   "id": "media-maraton-cordoba-2026",
@@ -14334,7 +14485,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 51.5074,
-  "lon": -0.1278
+  "lon": -0.1278,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "hyrox-milan-2026-12",
@@ -14365,7 +14519,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 45.4642,
-  "lon": 9.1896
+  "lon": 9.1896,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "k42-canarias-anaga-marathon-2026",
@@ -14861,7 +15018,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 50.1106,
-  "lon": 8.6821
+  "lon": 8.6821,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "hyrox-stockholm-2026-12",
@@ -14891,7 +15051,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 59.3251,
-  "lon": 18.0711
+  "lon": 18.0711,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "5k-y-10k-fuentes-de-ebro-2026",
@@ -15005,7 +15168,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 48.8589,
-  "lon": 2.32
+  "lon": 2.32,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "la-viorna-vertical-nocturno-2026",
@@ -15215,7 +15381,10 @@ const RACES = [
   "url": "https://www.clm24.es/articulo/deportes/circuito-carreras-ciudad-real-2026-calendario-19-pruebas/20260202210158470184.html",
   "summary": "10K que cierra el Circuito de Carreras de Ciudad Real.",
   "lat": 39.0722,
-  "lon": -3.6144
+  "lon": -3.6144,
+  "series": [
+   "Circuito de Carreras de Ciudad Real"
+  ]
  },
  {
   "id": "5k-y-10k-ciudad-de-borja-2026",
@@ -17315,7 +17484,10 @@ const RACES = [
   "url": "https://carrerasdemontana.com/2025/12/02/calendario-carreras-montana-castilla-la-mancha-2026-mayayo/",
   "summary": "Trail de 20 km por el Alto Tajo, Copa CLM.",
   "lat": 40.7014,
-  "lon": -2.593
+  "lon": -2.593,
+  "series": [
+   "Copa CLM"
+  ]
  },
  {
   "id": "legua-urbana-nocturna-la-bellota-2027",
@@ -17874,7 +18046,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 53.4795,
-  "lon": -2.2451
+  "lon": -2.2451,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "ultramediterrania-terres-de-trail-2027",
@@ -17916,7 +18091,10 @@ const RACES = [
   "url": "https://utmb.world/utmb-world-series-events",
   "summary": "Ultra invernal (22-24 ene 2027) por el South West Coast Path de Cornualles: viento, barro y noche larga en pleno enero. Una de las 100 millas más duras del Reino Unido.",
   "lat": 50.0225,
-  "lon": -5.0972
+  "lon": -5.0972,
+  "series": [
+   "UTMB World Series"
+  ]
  },
  {
   "id": "hyrox-amsterdam-2027-01",
@@ -17946,7 +18124,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 52.3731,
-  "lon": 4.8925
+  "lon": 4.8925,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "trail-terras-de-buron-2027",
@@ -18646,7 +18827,10 @@ const RACES = [
   "url": "https://carrerasdemontana.com/2025/12/02/calendario-carreras-montana-castilla-la-mancha-2026-mayayo/",
   "summary": "Trail por la Serranía de Cuenca, Copa CLM.",
   "lat": 40.0423,
-  "lon": -1.648
+  "lon": -1.648,
+  "series": [
+   "Copa CLM"
+  ]
  },
  {
   "id": "carrera-pedestre-vega-de-cantimpalos-2027",
@@ -18739,7 +18923,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 43.263,
-  "lon": -2.935
+  "lon": -2.935,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "llanera-10k-2027",
@@ -18823,7 +19010,10 @@ const RACES = [
   "url": "https://www.clm24.es/articulo/deportes/circuito-carreras-ciudad-real-2026-calendario-19-pruebas/20260202210158470184.html",
   "summary": "10K entre viñedos, abre el Circuito de Ciudad Real.",
   "lat": 39.2181,
-  "lon": -3.607
+  "lon": -3.607,
+  "series": [
+   "Circuito de Carreras de Ciudad Real"
+  ]
  },
  {
   "id": "duatlon-de-valdebebas-2027",
@@ -19258,7 +19448,10 @@ const RACES = [
   "url": "https://running.life/calendario-carreras/espana/andalucia",
   "summary": "Prueba HYROX de fitness en Marbella.",
   "lat": 36.5075,
-  "lon": -4.8047
+  "lon": -4.8047,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "hyrox-vienna-2027-02",
@@ -19288,7 +19481,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 48.2084,
-  "lon": 16.3725
+  "lon": 16.3725,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "corre-cobo-2027",
@@ -19606,7 +19802,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 37.3886,
-  "lon": -5.9953
+  "lon": -5.9953,
+  "series": [
+   "Zurich Maratón"
+  ]
  },
  {
   "id": "transgrancanaria-2027",
@@ -20154,7 +20353,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 38.7078,
-  "lon": -9.1366
+  "lon": -9.1366,
+  "series": [
+   "SuperHalfs"
+  ]
  },
  {
   "id": "galar-trail-2-0-2027",
@@ -20406,7 +20608,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 35.6769,
-  "lon": 139.7639
+  "lon": 139.7639,
+  "series": [
+   "Abbott World Marathon Majors"
+  ]
  },
  {
   "id": "gr221-trans-mallorca-2027",
@@ -20679,7 +20884,10 @@ const RACES = [
   "url": "https://imd.sevilla.org/programas-deportivos/circuito-carreras-sevilla10",
   "summary": "Prueba del circuito municipal Sevilla10 por Triana y Los Remedios.",
   "lat": 37.3886,
-  "lon": -5.9953
+  "lon": -5.9953,
+  "series": [
+   "Circuito Sevilla10"
+  ]
  },
  {
   "id": "maraton-badajoz-2027",
@@ -20871,7 +21079,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 41.3826,
-  "lon": 2.1771
+  "lon": 2.1771,
+  "series": [
+   "Zurich Maratón"
+  ]
  },
  {
   "id": "hyrox-madrid-2027-03",
@@ -20902,7 +21113,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 40.4168,
-  "lon": -3.7035
+  "lon": -3.7035,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "chianti-ultra-trail-by-utmb-2027",
@@ -20923,7 +21137,10 @@ const RACES = [
   "url": "https://chianti.utmb.world",
   "summary": "Festival del 18 al 21 mar 2027 entre viñedos, bosques y pueblos medievales de la Toscana. Ultra rodador ideal para abrir la temporada.",
   "lat": 43.4871,
-  "lon": 11.3747
+  "lon": 11.3747,
+  "series": [
+   "UTMB World Series"
+  ]
  },
  {
   "id": "iberika-trail-guadalix-de-la-sierra-2027",
@@ -21049,7 +21266,10 @@ const RACES = [
   "url": "https://www.clm24.es/articulo/deportes/circuito-carreras-ciudad-real-2026-calendario-19-pruebas/20260202210158470184.html",
   "summary": "Media maratón del Circuito de Ciudad Real.",
   "lat": 38.9063,
-  "lon": -3.663
+  "lon": -3.663,
+  "series": [
+   "Circuito de Carreras de Ciudad Real"
+  ]
  },
  {
   "id": "zubiri-pamplona-2027",
@@ -21205,7 +21425,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 55.6867,
-  "lon": 12.5701
+  "lon": 12.5701,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "cursa-de-l-airosa-2027",
@@ -21298,7 +21521,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 51.9244,
-  "lon": 4.4778
+  "lon": 4.4778,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "istria-100-by-utmb-2027",
@@ -21319,7 +21545,10 @@ const RACES = [
   "url": "https://istria.utmb.world",
   "summary": "Festival del 1 al 4 abr 2027 atravesando la península de Istria desde el monte Učka hasta la costa adriática. Clásica primaveral de 100 millas.",
   "lat": 45.4324,
-  "lon": 13.5224
+  "lon": 13.5224,
+  "series": [
+   "UTMB World Series"
+  ]
  },
  {
   "id": "ultra-sierra-nevada-2027",
@@ -21390,7 +21619,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 50.0875,
-  "lon": 14.4213
+  "lon": 14.4213,
+  "series": [
+   "SuperHalfs"
+  ]
  },
  {
   "id": "ironman-703-vilamoura-2027",
@@ -21411,7 +21643,10 @@ const RACES = [
   "summary": "Prueba nueva en 2027 en el Algarve: natación en mar junto a la marina y bici por el interior algarvío. Las plazas generales ya están agotadas; solo quedan paquetes IRONMAN Experiences.",
   "region": null,
   "lat": 37.076,
-  "lon": -8.1165
+  "lon": -8.1165,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "zurich-10k-ciudad-de-don-benito-2027",
@@ -21432,7 +21667,10 @@ const RACES = [
   "url": "https://running.life/calendario-carreras/espana/extremadura",
   "summary": "Diez kilómetros urbanos por Don Benito.",
   "lat": 38.954,
-  "lon": -5.8619
+  "lon": -5.8619,
+  "series": [
+   "Zurich Maratón"
+  ]
  },
  {
   "id": "brighton-marathon-2027",
@@ -21529,7 +21767,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 52.5174,
-  "lon": 13.3951
+  "lon": 13.3951,
+  "series": [
+   "SuperHalfs"
+  ]
  },
  {
   "id": "getxoko-maratoi-erdia-2027",
@@ -21800,7 +22041,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 50.9384,
-  "lon": 6.96
+  "lon": 6.96,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "hyrox-paris-grand-palais-2027-04",
@@ -21830,7 +22074,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 48.8589,
-  "lon": 2.32
+  "lon": 2.32,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "tenerife-bluetrail-2027",
@@ -21867,7 +22114,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 28.2936,
-  "lon": -16.6214
+  "lon": -16.6214,
+  "series": [
+   "UTMB World Series"
+  ]
  },
  {
   "id": "travessa-mallorca-serra-de-tramuntana-2027",
@@ -22077,7 +22327,10 @@ const RACES = [
   "url": "https://imd.sevilla.org/programas-deportivos/circuito-carreras-sevilla10",
   "summary": "Prueba del circuito Sevilla10 por los barrios del Cerro y Amate.",
   "lat": 37.3886,
-  "lon": -5.9953
+  "lon": -5.9953,
+  "series": [
+   "Circuito Sevilla10"
+  ]
  },
  {
   "id": "carrera-de-primavera-de-mejorada-del-campo-2027",
@@ -22416,7 +22669,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 36.7648,
-  "lon": -4.4422
+  "lon": -4.4422,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "alameda-trail-2027",
@@ -22479,7 +22735,10 @@ const RACES = [
   "summary": "Inaugura la temporada europea de Challenge Family con natación en el Atlántico y una bici muy exigente por las carreteras montañosas del sur de Gran Canaria. En 2027 pasa a dos días: grupos de edad el sábado y profesionales el domingo 18.",
   "region": "Canarias",
   "lat": 28.1074,
-  "lon": -15.5627
+  "lon": -15.5627,
+  "series": [
+   "Challenge Family"
+  ]
  },
  {
   "id": "half-marathon-magaluf-2027",
@@ -22723,7 +22982,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 39.4697,
-  "lon": -0.3763
+  "lon": -0.3763,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "sherry-maraton-jerez-2027",
@@ -22993,7 +23255,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 42.3588,
-  "lon": -71.0578
+  "lon": -71.0578,
+  "series": [
+   "Abbott World Marathon Majors"
+  ]
  },
  {
   "id": "gran-trail-sobrarbe-2027",
@@ -23035,7 +23300,10 @@ const RACES = [
   "url": "https://www.ironman.com/races/im703-venice-jesolo",
   "summary": "Natación en el Adriático, ciclismo totalmente llano por la laguna veneta y carrera junto al paseo marítimo de Jesolo. Muy rápido y de temporada temprana; inscripción 2027 ya abierta.",
   "lat": 45.5347,
-  "lon": 12.6538
+  "lon": 12.6538,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "kilometro-vertical-puerto-del-alacran-2027",
@@ -23162,7 +23430,10 @@ const RACES = [
   "url": "https://ventoux.utmb.world",
   "summary": "Festival del 23 al 25 abr 2027 alrededor del Gigante de Provenza, con subidas por pistas forestales y la cima lunar del Ventoux.",
   "lat": 44.1213,
-  "lon": 5.2136
+  "lon": 5.2136,
+  "series": [
+   "UTMB World Series"
+  ]
  },
  {
   "id": "antwerp-10-miles-2027",
@@ -23318,7 +23589,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 40.4168,
-  "lon": -3.7035
+  "lon": -3.7035,
+  "series": [
+   "Rock 'n' Roll Running Series"
+  ]
  },
  {
   "id": "maraton-londres-2027",
@@ -23358,7 +23632,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 51.5074,
-  "lon": -0.1278
+  "lon": -0.1278,
+  "series": [
+   "Abbott World Marathon Majors"
+  ]
  },
  {
   "id": "trail-del-capellan-de-valdilecha-2027",
@@ -23472,7 +23749,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 38.7078,
-  "lon": -9.1366
+  "lon": -9.1366,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "trail-menorca-cami-de-cavalls-2027",
@@ -23667,7 +23947,10 @@ const RACES = [
   "url": "https://www.clm24.es/articulo/deportes/circuito-carreras-ciudad-real-2026-calendario-19-pruebas/20260202210158470184.html",
   "summary": "10K urbano del Circuito de Ciudad Real.",
   "lat": 38.9962,
-  "lon": -3.3722
+  "lon": -3.3722,
+  "series": [
+   "Circuito de Carreras de Ciudad Real"
+  ]
  },
  {
   "id": "carrera-solidaria-aritas-sierra-2027",
@@ -23772,7 +24055,10 @@ const RACES = [
   "summary": "Uno de los 70.3 más grandes de Europa: natación en la bahía de Alcúdia y bici con la subida al Coll de Femenia por la Serra de Tramuntana, seguida de una carrera llana por la costa. Clasifica para el Mundial 70.3 y está agotado.",
   "region": "Islas Baleares",
   "lat": 39.81,
-  "lon": 3.2183
+  "lon": 3.2183,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "segura-xtreme-triathlon-2027",
@@ -23908,7 +24194,10 @@ const RACES = [
   "url": "https://imd.sevilla.org/programas-deportivos/circuito-carreras-sevilla10",
   "summary": "Prueba del circuito Sevilla10 por el Parque de María Luisa.",
   "lat": 37.3886,
-  "lon": -5.9953
+  "lon": -5.9953,
+  "series": [
+   "Circuito Sevilla10"
+  ]
  },
  {
   "id": "challenge-salou-2027",
@@ -23940,7 +24229,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 41.0768,
-  "lon": 1.144
+  "lon": 1.144,
+  "series": [
+   "Challenge Family"
+  ]
  },
  {
   "id": "copenhagen-marathon-2027",
@@ -24211,7 +24503,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 28.9204,
-  "lon": -13.6507
+  "lon": -13.6507,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "karlovy-vary-half-marathon-2027",
@@ -24295,7 +24590,10 @@ const RACES = [
   "url": "https://www.challengefamily.com/races/",
   "summary": "Prueba Challenge en la Riviera Romagnola con natación en el Adriático y ciclismo hacia las colinas de Romaña. Distancia exacta por confirmar en la web oficial.",
   "lat": 44.1999,
-  "lon": 12.397
+  "lon": 12.397,
+  "series": [
+   "Challenge Family"
+  ]
  },
  {
   "id": "cursa-popular-de-nou-barris-2027",
@@ -24472,7 +24770,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 52.5174,
-  "lon": 13.3951
+  "lon": 13.3951,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "challenge-championship-samorin-2027",
@@ -24493,7 +24794,10 @@ const RACES = [
   "summary": "Campeonato de Challenge Family en el complejo x-bionic sphere, con natación en lago, bici totalmente llana y carrera en el recinto. Es una carrera rapidísima con un nivel profesional muy alto. Se disputa entre el 22 y el 23 de mayo.",
   "region": null,
   "lat": 48.0276,
-  "lon": 17.3116
+  "lon": 17.3116,
+  "series": [
+   "Challenge Family"
+  ]
  },
  {
   "id": "goteborgsvarvet-2027",
@@ -24698,7 +25002,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Uno de los 70.3 más veteranos de Alemania: natación en el lago Hardtsee y ciclismo ondulado por las colinas del Kraichgau con gran ambiente.",
   "lat": 49.2108,
-  "lon": 8.6549
+  "lon": 8.6549,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "ironman-703-pays-daix-2027",
@@ -24719,7 +25026,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en el lago de Peyrolles, ciclismo con desnivel bajo la montaña Sainte-Victoire y carrera por el centro de Aix. Prueba de la IRONMAN Pro Series.",
   "lat": 43.5298,
-  "lon": 5.4475
+  "lon": 5.4475,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "ironman-703-st-polten-2027",
@@ -24740,7 +25050,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Regreso del 70.3 a St. Pölten en 2027 (antes Challenge): natación en dos lagos, ciclismo por el valle del Danubio (Wachau) y carrera urbana.",
   "lat": 48.2044,
-  "lon": 15.6229
+  "lon": 15.6229,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "kv-castro-valnera-2027",
@@ -24909,7 +25222,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 43.9465,
-  "lon": 12.6307
+  "lon": 12.6307,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "stockholm-marathon-2027",
@@ -25114,7 +25430,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en aguas cristalinas de la Riviera del Corallo, ciclismo costero con repechos y carrera por el casco histórico de Alghero.",
   "lat": 40.5966,
-  "lon": 8.2913
+  "lon": 8.2913,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "madrid-vintage-run-by-totalenergies-2027",
@@ -25240,7 +25559,10 @@ const RACES = [
   "url": "https://mozart.utmb.world",
   "summary": "Sale del casco histórico de Salzburgo y recorre los lagos y montañas del Salzkammergut. Ultra corrible y muy escénico.",
   "lat": 47.7981,
-  "lon": 13.0465
+  "lon": 13.0465,
+  "series": [
+   "UTMB World Series"
+  ]
  },
  {
   "id": "ruta-vetona-2027",
@@ -25303,7 +25625,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en el embalse de Pennington Flash y ciclismo duro por las colinas de Lancashire. Exigente y con mucho público.",
   "lat": 53.5783,
-  "lon": -2.43
+  "lon": -2.43,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "ironman-703-switzerland-2027",
@@ -25324,7 +25649,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en el lago de Zúrich, ciclismo con la exigente subida 'The Beast' y carrera por el casco antiguo de Rapperswil.",
   "lat": 47.2298,
-  "lon": 8.8597
+  "lon": 8.8597,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "ironman-703-tours-2027",
@@ -25345,7 +25673,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en el lago de la Bergeonnerie, ciclismo llano por el valle del Loira entre châteaux y carrera junto al río. Muy rápido.",
   "lat": 47.39,
-  "lon": 0.6889
+  "lon": 0.6889,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "ironman-hamburg-2027",
@@ -25366,7 +25697,10 @@ const RACES = [
   "summary": "Natación en el lago Alster en pleno centro, bici llana y rápida y maratón urbano con mucho público. La fecha sale de calendarios de terceros: hay que confirmarla, porque las fuentes no coinciden sobre si mantiene el título de Campeonato de Europa.",
   "region": null,
   "lat": 53.5502,
-  "lon": 10.0013
+  "lon": 10.0013,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "kilometro-vertical-de-la-barranca-2027",
@@ -25493,7 +25827,10 @@ const RACES = [
   "url": "https://andorra.utmb.world",
   "summary": "Festival del 10 al 13 jun 2027 (antes Andorra Ultra Trail). La Ronda dels Cims recorre las cumbres del Principado con uno de los desniveles más brutales del circuito.",
   "lat": 42.6007,
-  "lon": 1.5301
+  "lon": 1.5301,
+  "series": [
+   "UTMB World Series"
+  ]
  },
  {
   "id": "hyrox-world-championships-hong-kong-2027-06",
@@ -25525,7 +25862,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 22.2818,
-  "lon": 114.1583
+  "lon": 114.1583,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "backyard-aranjuez-only-one-race-2027",
@@ -25731,7 +26071,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en el turquesa Wörthersee terminando por el canal Lendkanal, ciclismo ondulado por Carintia y carrera llana: uno de los Ironman más rápidos y bonitos de Europa.",
   "lat": 46.6239,
-  "lon": 14.3076
+  "lon": 14.3076,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "maraton-alpino-madrileno-2027",
@@ -25773,7 +26116,10 @@ const RACES = [
   "url": "https://zugspitz.utmb.world",
   "summary": "Festival del 17 al 20 jun 2027 alrededor del Zugspitze, la cumbre más alta de Alemania, entre Baviera y el Tirol austríaco.",
   "lat": 47.4517,
-  "lon": 11.0102
+  "lon": 11.0102,
+  "series": [
+   "UTMB World Series"
+  ]
  },
  {
   "id": "carrera-correr-sin-glu-2027",
@@ -25899,7 +26245,10 @@ const RACES = [
   "url": "https://www.challengefamily.com/races/",
   "summary": "Natación en el Báltico, ciclismo llano por la región de Pomerania y carrera por el centro histórico de Gdańsk.",
   "lat": 54.4288,
-  "lon": 18.7983
+  "lon": 18.7983,
+  "series": [
+   "Challenge Family"
+  ]
  },
  {
   "id": "gran-triatlon-madrid-2027",
@@ -25951,7 +26300,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en el Markermeer, ciclismo llano entre pólderes y diques, y carrera por el puerto histórico de Hoorn. Rapidísimo salvo por el viento.",
   "lat": 52.6533,
-  "lon": 5.0736
+  "lon": 5.0736,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "klm-carrera-norte-vs-sur-2027",
@@ -26014,7 +26366,10 @@ const RACES = [
   "url": "https://lavaredo.utmb.world",
   "summary": "Festival del 23 al 27 jun 2027 en las Dolomitas; la LUT sale de noche desde Cortina y pasa por las Tre Cime di Lavaredo. Una de las ultras más icónicas de Europa, con alta demanda.",
   "lat": 46.5685,
-  "lon": 12.1323
+  "lon": 12.1323,
+  "series": [
+   "UTMB World Series"
+  ]
  },
  {
   "id": "riano-trail-run-2027",
@@ -26140,7 +26495,10 @@ const RACES = [
   "url": "https://www.challengefamily.com/races/",
   "summary": "Natación en el lago Walchsee y ciclismo por el Tirol a los pies del Kaisergebirge. Media distancia alpina de gran belleza.",
   "lat": 47.6512,
-  "lon": 12.3186
+  "lon": 12.3186,
+  "series": [
+   "Challenge Family"
+  ]
  },
  {
   "id": "ironman-703-elsinore-2027",
@@ -26161,7 +26519,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en el estrecho de Øresund junto al castillo de Kronborg (Hamlet), ciclismo por el norte de Selandia. Suele agotarse en días.",
   "lat": 56.0349,
-  "lon": 12.613
+  "lon": 12.613,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "ironman-frankfurt-2027",
@@ -26196,7 +26557,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 50.1106,
-  "lon": 8.6821
+  "lon": 8.6821,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "marathon-du-mont-blanc-2027",
@@ -26345,7 +26709,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 49.1953,
-  "lon": 11.0567
+  "lon": 11.0567,
+  "series": [
+   "Challenge Family"
+  ]
  },
  {
   "id": "ironman-switzerland-thun-2027",
@@ -26366,7 +26733,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en el lago de Thun con vistas a Eiger, Mönch y Jungfrau, ciclismo exigente por el Emmental y carrera junto al río Aare.",
   "lat": 46.7583,
-  "lon": 7.6281
+  "lon": 7.6281,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "al-andalus-ultimate-trail-2027",
@@ -26408,7 +26778,10 @@ const RACES = [
   "url": "https://valdaran.utmb.world",
   "summary": "Festival del 7 al 11 jul 2027 en el Pirineo leridano; la VDA recorre la Val d'Aran entre lagos, collados y alta montaña. Gran cita de la UTMB World Series en España.",
   "lat": 42.7018,
-  "lon": 0.7955
+  "lon": 0.7955,
+  "series": [
+   "UTMB World Series"
+  ]
  },
  {
   "id": "marimurumendi-2027",
@@ -26485,7 +26858,10 @@ const RACES = [
   "url": "https://verbier.utmb.world",
   "summary": "Festival del 9 al 11 jul 2027 en los Alpes del Valais, con paso por el Gran San Bernardo. Terreno alpino técnico y muy duro.",
   "lat": 46.0961,
-  "lon": 7.2287
+  "lon": 7.2287,
+  "series": [
+   "UTMB World Series"
+  ]
  },
  {
   "id": "ironman-703-jonkoping-2027",
@@ -26506,7 +26882,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en el gran lago Vättern, ciclismo por bosques suecos y carrera por el centro. Forma parte de la IRONMAN Pro Series 2027.",
   "lat": 57.7826,
-  "lon": 14.1657
+  "lon": 14.1657,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "ironman-703-luxembourg-2027",
@@ -26527,7 +26906,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en el río Mosela, ciclismo entre viñedos de la frontera Luxemburgo-Alemania-Francia. Plazas individuales agotadas según terceros (solo relevos).",
   "lat": 49.5442,
-  "lon": 6.3676
+  "lon": 6.3676,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "ironman-703-swansea-2027",
@@ -26548,7 +26930,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en el puerto de Swansea, ciclismo por la península de Gower y carrera por la bahía. Recorrido técnico y con repechos.",
   "lat": 51.6196,
-  "lon": -3.9459
+  "lon": -3.9459,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "ironman-703-vitoria-2027",
@@ -26579,7 +26964,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 42.8506,
-  "lon": -2.6614
+  "lon": -2.6614,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "ironman-vitoria-2027",
@@ -26614,7 +27002,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 42.8506,
-  "lon": -2.6614
+  "lon": -2.6614,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "eiger-ultra-trail-2027",
@@ -26635,7 +27026,10 @@ const RACES = [
   "url": "https://eiger.utmb.world",
   "summary": "Festival del 14 al 18 jul 2027 bajo la cara norte del Eiger, con paso por First, Faulhorn y Kleine Scheidegg. Paisaje alpino espectacular.",
   "lat": 46.6243,
-  "lon": 8.0367
+  "lon": 8.0367,
+  "series": [
+   "UTMB World Series"
+  ]
  },
  {
   "id": "gran-trail-aneto-posets-2027",
@@ -26776,7 +27170,10 @@ const RACES = [
   "url": "https://kat.utmb.world",
   "summary": "Festival del 5 al 7 ago 2027 por los Alpes de Kitzbühel, Kaisergebirge y Hohe Tauern. Ultras alpinos de largo recorrido.",
   "lat": 47.4464,
-  "lon": 12.3911
+  "lon": 12.3911,
+  "series": [
+   "UTMB World Series"
+  ]
  },
  {
   "id": "ironman-tallinn-2027",
@@ -26797,7 +27194,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en el lago Harku, ciclismo llano por el norte de Estonia y carrera por el casco medieval de Tallin. Fecha 2027 estimada (el 70.3 Tallinn está el 8 ago 2027).",
   "lat": 59.4372,
-  "lon": 24.7573
+  "lon": 24.7573,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "norseman-xtreme-triathlon-2027",
@@ -26860,7 +27260,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en el Báltico, ciclismo cruzando el puente a la isla de Öland y carrera por Kalmar con un ambiente legendario. Fecha estimada según 2026 (15 ago).",
   "lat": 56.6629,
-  "lon": 16.3662
+  "lon": 16.3662,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "embrunman-2027",
@@ -26902,7 +27305,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en la bahía de Amager Strand, ciclismo llano por la costa de Selandia y carrera por el centro histórico y Nyhavn. Muy rápido. Fecha estimada según 2026 (16 ago).",
   "lat": 55.6867,
-  "lon": 12.5701
+  "lon": 12.5701,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "ironman-leeds-2027",
@@ -26923,7 +27329,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en el lago de Roundhay Park y ciclismo por los Yorkshire Dales con fuertes repechos. Fecha estimada según 2026 (16 ago).",
   "lat": 53.7974,
-  "lon": -1.5438
+  "lon": -1.5438,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "duatlon-villa-de-cantimpalos-2027",
@@ -26986,7 +27395,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en el lago de Allier, ciclismo ondulado por Auvernia y carrera llana por los parques de la ciudad termal. Fecha estimada (el 70.3 Vichy es el 22 ago 2027).",
   "lat": 46.124,
-  "lon": 3.4204
+  "lon": 3.4204,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "maraton-y-media-maraton-bascones-de-ojeda-2027",
@@ -27088,7 +27500,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 45.9231,
-  "lon": 6.87
+  "lon": 6.87,
+  "series": [
+   "UTMB World Series"
+  ]
  },
  {
   "id": "carrera-churrigueresca-2027",
@@ -27130,7 +27545,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en el canal olímpico de remo de Wedau, ciclismo llano por la cuenca del Ruhr y carrera en el Landschaftspark industrial.",
   "lat": 51.435,
-  "lon": 6.7596
+  "lon": 6.7596,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "ironman-703-zell-am-see-2027",
@@ -27151,7 +27569,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en el lago Zell, ciclismo con la subida al Filzensattel y carrera junto al lago rodeado de los Alpes de Salzburgo.",
   "lat": 47.324,
-  "lon": 12.7963
+  "lon": 12.7963,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "sydney-marathon-2027",
@@ -27187,7 +27608,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": -33.8698,
-  "lon": 151.2083
+  "lon": 151.2083,
+  "series": [
+   "Abbott World Marathon Majors"
+  ]
  },
  {
   "id": "triatlo-banyoles-2027",
@@ -27270,7 +27694,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 28.2936,
-  "lon": -16.6214
+  "lon": -16.6214,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "triatlon-cnso-gijon-2027",
@@ -27430,7 +27857,10 @@ const RACES = [
   "url": "https://www.challenge-almere.com",
   "summary": "Una de las larga distancia más antiguas de Europa: natación en el Weerwater, ciclismo totalmente llano por los pólderes de Flevoland, con el viento como gran rival.",
   "lat": 52.3705,
-  "lon": 5.2186
+  "lon": 5.2186,
+  "series": [
+   "Challenge Family"
+  ]
  },
  {
   "id": "jungfrau-marathon-2027",
@@ -27551,7 +27981,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en el lago Dämeritzsee, ciclismo llano por los bosques de Brandeburgo a las afueras de Berlín. Recorrido rápido de final de verano.",
   "lat": 52.426,
-  "lon": 13.7543
+  "lon": 13.7543,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "ironman-703-nice-2027",
@@ -27572,7 +28005,10 @@ const RACES = [
   "summary": "Media distancia en la Costa Azul con bici de montaña exigente y carrera por la Promenade des Anglais. Se traslada a septiembre junto al IRONMAN; la fecha exacta está pendiente de confirmación oficial.",
   "region": null,
   "lat": 43.7009,
-  "lon": 7.2684
+  "lon": 7.2684,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "ironman-nice-2027",
@@ -27593,7 +28029,10 @@ const RACES = [
   "summary": "Clásico con natación en la Baie des Anges, bici muy montañosa por los Alpes Marítimos (unos 2.400 m de desnivel) y maratón por la Promenade des Anglais. La edición de 2026 se canceló por una ola de calor y en 2027 pasa a septiembre; el día 12 aún no está confirmado oficialmente.",
   "region": null,
   "lat": 43.7009,
-  "lon": 7.2684
+  "lon": 7.2684,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "ironman-wales-2027",
@@ -27614,7 +28053,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en la playa North Beach, ciclismo muy duro por Pembrokeshire y maratón con cuestas entre un público legendario. Fecha estimada según 2026 (13 sep).",
   "lat": 51.6726,
-  "lon": -4.705
+  "lon": -4.705,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "tallinn-marathon-2027",
@@ -27677,7 +28119,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Natación en el Adriático, ciclismo mayormente llano con una subida a Bertinoro y carrera por Cervia y Milano Marittima. Muy rápido y popular. Fecha estimada (el 70.3 es el 19 sep 2027).",
   "lat": 44.261,
-  "lon": 12.3495
+  "lon": 12.3495,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "madrid-segovia-100k-2027",
@@ -27795,7 +28240,10 @@ const RACES = [
    "capacity": "45.000 plazas"
   },
   "lat": 55.6867,
-  "lon": 12.5701
+  "lon": 12.5701,
+  "series": [
+   "SuperHalfs"
+  ]
  },
  {
   "id": "cursa-merce-2027",
@@ -27897,7 +28345,10 @@ const RACES = [
   "url": "https://www.ironman.com/races",
   "summary": "Media distancia llana junto al Adriático en la Riviera Romagnola, el día después del Ironman completo. Ideal para marca personal.",
   "lat": 44.261,
-  "lon": 12.3495
+  "lon": 12.3495,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "triatlon-ciudad-de-plasencia-2027",
@@ -28002,7 +28453,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 41.8933,
-  "lon": 12.4829
+  "lon": 12.4829,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "carrera-nocturna-guadalquivir-2027",
@@ -28192,7 +28646,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 52.5174,
-  "lon": 13.3951
+  "lon": 13.3951,
+  "series": [
+   "Abbott World Marathon Majors"
+  ]
  },
  {
   "id": "carrera-menudos-corazones-2027",
@@ -28412,7 +28869,10 @@ const RACES = [
   "url": "https://carrerasdemontana.com/2025/12/02/calendario-carreras-montana-castilla-la-mancha-2026-mayayo/",
   "summary": "Trail por la Sierra de Alcaraz, Copa CLM.",
   "lat": 38.5974,
-  "lon": -2.3458
+  "lon": -2.3458,
+  "series": [
+   "Copa CLM"
+  ]
  },
  {
   "id": "wachau-marathon-2027",
@@ -28454,7 +28914,10 @@ const RACES = [
   "url": "https://www.challengefamily.com/races/",
   "summary": "Natación en el lago marino de Port d'Albret, ciclismo por los pinares de las Landas y carrera junto al Atlántico. Muy cerca de la frontera española.",
   "lat": 43.7854,
-  "lon": -1.4044
+  "lon": -1.4044,
+  "series": [
+   "Challenge Family"
+  ]
  },
  {
   "id": "ultra-pirineu-2027",
@@ -28533,7 +28996,10 @@ const RACES = [
   "url": "https://www.cardiffhalfmarathon.co.uk",
   "summary": "Una de las medias más grandes de Reino Unido: salida junto al castillo de Cardiff, paso por la presa de la bahía y Roath Park. Fecha 2027 estimada.",
   "lat": 51.4817,
-  "lon": -3.1792
+  "lon": -3.1792,
+  "series": [
+   "SuperHalfs"
+  ]
  },
  {
   "id": "carrera-down-madrid-2027",
@@ -28575,7 +29041,10 @@ const RACES = [
   "url": "https://imd.sevilla.org/programas-deportivos/circuito-carreras-sevilla10",
   "summary": "Prueba del circuito Sevilla10 por Nervión y San Pablo.",
   "lat": 37.3886,
-  "lon": -5.9953
+  "lon": -5.9953,
+  "series": [
+   "Circuito Sevilla10"
+  ]
  },
  {
   "id": "carrera-popular-corre-por-el-nino-2027",
@@ -28673,7 +29142,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 41.6133,
-  "lon": 2.6576
+  "lon": 2.6576,
+  "series": [
+   "Circuito IRONMAN"
+  ]
  },
  {
   "id": "maraton-logrono-2027",
@@ -28909,7 +29381,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 41.8756,
-  "lon": -87.6244
+  "lon": -87.6244,
+  "series": [
+   "Abbott World Marathon Majors"
+  ]
  },
  {
   "id": "budapest-marathon-2027",
@@ -29101,7 +29576,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 39.4697,
-  "lon": -0.3763
+  "lon": -0.3763,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "challenge-peguera-mallorca-2027",
@@ -29133,7 +29611,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 42.1602,
-  "lon": 1.772
+  "lon": 1.772,
+  "series": [
+   "Challenge Family"
+  ]
  },
  {
   "id": "bilbao-night-running-fest-2027",
@@ -29209,7 +29690,10 @@ const RACES = [
   "url": "https://imd.sevilla.org/programas-deportivos/circuito-carreras-sevilla10",
   "summary": "Prueba del circuito Sevilla10 por el casco histórico de Sevilla.",
   "lat": 37.3886,
-  "lon": -5.9953
+  "lon": -5.9953,
+  "series": [
+   "Circuito Sevilla10"
+  ]
  },
  {
   "id": "carrera-contra-el-suicidio-2027",
@@ -29335,7 +29819,10 @@ const RACES = [
   "url": "https://carrerasdemontana.com/2025/12/02/calendario-carreras-montana-castilla-la-mancha-2026-mayayo/",
   "summary": "Trail por Sierra Morena, Copa CLM.",
   "lat": 38.405,
-  "lon": -4.305
+  "lon": -4.305,
+  "series": [
+   "Copa CLM"
+  ]
  },
  {
   "id": "media-maraton-jerez-2027",
@@ -29535,7 +30022,10 @@ const RACES = [
   "summary": "Natación en la bahía de Cascais, bici con viento atlántico y alguna subida hacia Sintra, y carrera por la costa. Las plazas generales de 2027 están agotadas.",
   "region": null,
   "lat": 38.6969,
-  "lon": -9.4204
+  "lon": -9.4204,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "media-maraton-cuenca-2027",
@@ -29598,7 +30088,10 @@ const RACES = [
   "url": "https://www.clm24.es/articulo/deportes/circuito-carreras-ciudad-real-2026-calendario-19-pruebas/20260202210158470184.html",
   "summary": "10K urbano del Circuito de Ciudad Real.",
   "lat": 39.2834,
-  "lon": -2.7905
+  "lon": -2.7905,
+  "series": [
+   "Circuito de Carreras de Ciudad Real"
+  ]
  },
  {
   "id": "burgos-21k-tras-las-huellas-del-cid-2027",
@@ -29686,7 +30179,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 41.3826,
-  "lon": 2.1771
+  "lon": 2.1771,
+  "series": [
+   "Challenge Family"
+  ]
  },
  {
   "id": "lausanne-marathon-2027",
@@ -29747,7 +30243,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 39.4697,
-  "lon": -0.3763
+  "lon": -0.3763,
+  "series": [
+   "SuperHalfs"
+  ]
  },
  {
   "id": "poznan-maraton-2027",
@@ -29810,7 +30309,10 @@ const RACES = [
   "url": "https://kullamannen.utmb.world",
   "summary": "Edición 2027 del ultra nocturno por la costa de Skåne; fecha estimada según el patrón habitual (último fin de semana de octubre).",
   "lat": 56.2827,
-  "lon": 12.4983
+  "lon": 12.4983,
+  "series": [
+   "UTMB World Series"
+  ]
  },
  {
   "id": "21k-ciudad-de-huelva-2027",
@@ -29921,7 +30423,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 36.7648,
-  "lon": -4.4422
+  "lon": -4.4422,
+  "series": [
+   "Circuito IRONMAN 70.3"
+  ]
  },
  {
   "id": "frankfurt-marathon-2027",
@@ -29980,7 +30485,10 @@ const RACES = [
   "url": "https://www.clm24.es/articulo/deportes/circuito-carreras-ciudad-real-2026-calendario-19-pruebas/20260202210158470184.html",
   "summary": "10K del Circuito de Ciudad Real.",
   "lat": 38.9419,
-  "lon": -3.2365
+  "lon": -3.2365,
+  "series": [
+   "Circuito de Carreras de Ciudad Real"
+  ]
  },
  {
   "id": "carreira-pedestre-popular-do-san-martino-2027",
@@ -30279,7 +30787,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 40.7127,
-  "lon": -74.006
+  "lon": -74.006,
+  "series": [
+   "Abbott World Marathon Majors"
+  ]
  },
  {
   "id": "hyrox-barcelona-2027-11",
@@ -30309,7 +30820,10 @@ const RACES = [
    "updated": "2026-10-23"
   },
   "lat": 41.3826,
-  "lon": 2.1771
+  "lon": 2.1771,
+  "series": [
+   "HYROX World Series"
+  ]
  },
  {
   "id": "3x7-media-maraton-palencia-2027",
@@ -30709,7 +31223,10 @@ const RACES = [
   "url": "https://www.clm24.es/articulo/deportes/circuito-carreras-ciudad-real-2026-calendario-19-pruebas/20260202210158470184.html",
   "summary": "Media maratón rural del Circuito de Ciudad Real.",
   "lat": 38.9648,
-  "lon": -3.8899
+  "lon": -3.8899,
+  "series": [
+   "Circuito de Carreras de Ciudad Real"
+  ]
  },
  {
   "id": "medio-maraton-elvas-badajoz-2027",
@@ -30751,7 +31268,10 @@ const RACES = [
   "url": "https://running.life/running-calendar/spain/pais-vasco",
   "summary": "Maratón rápido y llano por Donostia.",
   "lat": 43.3224,
-  "lon": -1.9839
+  "lon": -1.9839,
+  "series": [
+   "Zurich Maratón"
+  ]
  },
  {
   "id": "media-maraton-de-guadalajara-y-km-witzenmann-2027",
@@ -31103,7 +31623,10 @@ const RACES = [
   "url": "https://www.clm24.es/articulo/deportes/circuito-carreras-ciudad-real-2026-calendario-19-pruebas/20260202210158470184.html",
   "summary": "10K que cierra el Circuito de Ciudad Real.",
   "lat": 39.0722,
-  "lon": -3.6144
+  "lon": -3.6144,
+  "series": [
+   "Circuito de Carreras de Ciudad Real"
+  ]
  },
  {
   "id": "san-silvestre-de-hortaleza-2027",
@@ -31486,7 +32009,7 @@ let favs = new Set();
 try { favs = new Set(JSON.parse(localStorage.getItem("favs") || "[]")); } catch {}
 const saveFavs = () => { try { localStorage.setItem("favs", JSON.stringify([...favs])); } catch {} };
 
-const state = { types: new Set(), fav: false, country: "", region: "", elev: "", q: "", past: false, month: null, mtype: "", near: null, day: "", mcont: "", mcountry: "", mregion: "", trail: "" };
+const state = { types: new Set(), fav: false, country: "", region: "", elev: "", q: "", past: false, month: null, mtype: "", near: null, day: "", mcont: "", mcountry: "", mregion: "", trail: "", series: "" };
 
 // Continente a partir del país (nombres en español)
 const CONTINENT = {
@@ -31770,6 +32293,7 @@ function renderRace() {
         <span class="rx-badge">${esc(r.type)}</span>
         ${r.distance ? `<span class="rx-badge ghost">${esc(r.distance)}</span>` : ""}
         ${r.lottery ? `<span class="rx-badge ghost">Sorteo</span>` : ""}
+        ${(r.series || []).map(s => `<span class="rx-badge series">🏅 ${esc(s)}</span>`).join("")}
       </div>
       <h2>${esc(r.name)}</h2>
       <p class="rx-where">📍 ${esc(r.city)}, ${esc(r.region || r.country)}${r.region ? ` · ${esc(r.country)}` : ""}</p>
@@ -32146,7 +32670,7 @@ function card(r) {
       <button class="star" data-id="${esc(r.id)}" aria-pressed="${favs.has(r.id)}" aria-label="Marcar ${esc(r.name)}">★</button>
     </div>
     <div class="bib-body">
-      <div class="tags"><span class="tag type">${esc(r.type)}</span>${r.elev != null ? `<span class="tag">D+ ${r.elev.toLocaleString("es-ES")} m</span>` : ""}</div>
+      <div class="tags"><span class="tag type">${esc(r.type)}</span>${(r.series || []).slice(0, 1).map(s => `<span class="tag series">🏅 ${esc(s)}</span>`).join("")}${r.elev != null ? `<span class="tag">D+ ${r.elev.toLocaleString("es-ES")} m</span>` : ""}</div>
       ${goingRow(r)}
     </div>
     <div class="bib-foot">
@@ -32186,6 +32710,7 @@ function render() {
     (!state.near || (km(state.near, r) ?? Infinity) <= state.near.km) &&
     (!state.day || r.date === state.day) &&
     (!state.trail || trailBucket(r) === state.trail) &&
+    (!state.series || (r.series || []).includes(state.series)) &&
     (!q || `${r.name} ${r.city} ${r.region || ""} ${r.country}`.toLowerCase().includes(q))
   ).sort((a,b) => d(a.date) - d(b.date));
   const groups = new Map();
@@ -32193,7 +32718,7 @@ function render() {
   const tl = document.getElementById("timeline");
   const plural = n => `${n} ${n === 1 ? "prueba" : "pruebas"}`;
   document.getElementById("count").textContent = `${list.length} de ${RACES.length}`;
-  const act = [state.day && "el " + fmt(state.day), ...state.types, state.country, state.region, state.elev && document.querySelector(`#elev option[value="${state.elev}"]`)?.textContent, state.past && "con pasadas"].filter(Boolean);
+  const act = [state.day && "el " + fmt(state.day), state.series && "🏅 " + state.series, ...state.types, state.country, state.region, state.elev && document.querySelector(`#elev option[value="${state.elev}"]`)?.textContent, state.past && "con pasadas"].filter(Boolean);
   document.getElementById("activeFilters").hidden = !act.length;
   document.getElementById("activeTxt").textContent = act.length ? "Filtrando: " + act.join(" · ") : "";
 
@@ -32330,6 +32855,12 @@ const countries = [...new Set(RACES.map(r => r.country))].sort();
 const sel = document.getElementById("country");
 sel.innerHTML = `<option value="">Todos los países</option>` + countries.map(c => `<option>${esc(c)}</option>`).join("");
 sel.addEventListener("change", () => { state.country = sel.value; render(); });
+(() => {
+  const c = {}; RACES.forEach(r => (r.series || []).forEach(s => { c[s] = (c[s] || 0) + 1; }));
+  const ss = document.getElementById("seriesSel");
+  ss.innerHTML = `<option value="">Todos los circuitos</option>` + Object.entries(c).sort((a, b) => b[1] - a[1]).map(([s, n]) => `<option value="${esc(s)}">${esc(s)} (${n})</option>`).join("");
+  ss.addEventListener("change", () => { state.series = ss.value; render(); });
+})();
 document.getElementById("elev").addEventListener("change", e => { state.elev = e.target.value; render(); });
 const regions = [...new Set(RACES.map(r => r.region).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
 const rsel = document.getElementById("region");
@@ -32423,7 +32954,8 @@ async function geocodeCity(q) {
 
 // Quitar todos los filtros
 function clearFilters() {
-  Object.assign(state, { types: new Set(), fav: false, country: "", region: "", elev: "", q: "", past: false, month: null, mtype: "", near: null, day: "", mcont: "", mcountry: "", mregion: "", trail: "" });
+  Object.assign(state, { types: new Set(), fav: false, country: "", region: "", elev: "", q: "", past: false, month: null, mtype: "", near: null, day: "", mcont: "", mcountry: "", mregion: "", trail: "", series: "" });
+  document.getElementById("seriesSel").value = "";
   document.getElementById("discSel").value = ""; const ds = document.getElementById("distSel"); ds.hidden = true; ds.innerHTML = "";
   document.getElementById("q").value = "";
   for (const id of ["country", "region", "elev"]) document.getElementById(id).value = "";
