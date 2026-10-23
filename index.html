@@ -386,6 +386,8 @@ html, body { overflow-x: clip; }
 .dp-foot .dp-month { background: var(--ink); color: #fff; border-radius: 999px; padding: 6px 14px; }
 
 /* Cerca de mí */
+.disc-filter { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; }
+.disc-filter select { border-radius: 10px; padding: 8px 10px; border: 1px solid var(--line); background: #fff; font: 600 14px var(--font-body); color: var(--ink); }
 .near { grid-column: 1 / -1; display: grid; gap: 8px; }
 .near-btn { justify-self: start; }
 .near-on { justify-self: start; display: inline-flex; align-items: center; gap: 8px; font: 600 13px var(--font-body); background: var(--ink); color: #fff; border-radius: 999px; padding: 6px 8px 6px 14px; cursor: pointer; }
@@ -591,6 +593,16 @@ footer p { margin: 0; }
   <div class="filters" role="group" aria-label="Filtros">
     <input id="q" type="search" placeholder="Buscar prueba o ciudad" aria-label="Buscar">
     <button class="chip" id="favChip" aria-pressed="false">★ Mis carreras</button>
+    <div class="disc-filter">
+      <select id="discSel" aria-label="Disciplina">
+        <option value="">Todas las disciplinas</option>
+        <option value="ruta">Ruta</option>
+        <option value="trail">Trail</option>
+        <option value="tri">Triatlón</option>
+        <option value="hyrox">HYROX</option>
+      </select>
+      <select id="distSel" aria-label="Distancia" hidden></select>
+    </div>
     <span class="count" id="count"></span>
     <div class="active-filters" id="activeFilters" hidden><span id="activeTxt"></span><button type="button" id="clearAll">Quitar filtros ✕</button></div>
     <div class="near" id="near">
@@ -31409,7 +31421,7 @@ let favs = new Set();
 try { favs = new Set(JSON.parse(localStorage.getItem("favs") || "[]")); } catch {}
 const saveFavs = () => { try { localStorage.setItem("favs", JSON.stringify([...favs])); } catch {} };
 
-const state = { types: new Set(), fav: false, country: "", region: "", elev: "", q: "", past: false, month: null, mtype: "", near: null, day: "", mcont: "", mcountry: "", mregion: "" };
+const state = { types: new Set(), fav: false, country: "", region: "", elev: "", q: "", past: false, month: null, mtype: "", near: null, day: "", mcont: "", mcountry: "", mregion: "", trail: "" };
 
 // Continente a partir del país (nombres en español)
 const CONTINENT = {
@@ -32079,6 +32091,7 @@ function render() {
     (!state.elev || elevBucket(r.elev) === state.elev) &&
     (!state.near || (km(state.near, r) ?? Infinity) <= state.near.km) &&
     (!state.day || r.date === state.day) &&
+    (!state.trail || trailBucket(r) === state.trail) &&
     (!q || `${r.name} ${r.city} ${r.region || ""} ${r.country}`.toLowerCase().includes(q))
   ).sort((a,b) => d(a.date) - d(b.date));
   const groups = new Map();
@@ -32234,6 +32247,36 @@ rsel.addEventListener("change", () => {
 });
 document.getElementById("q").addEventListener("input", e => { state.q = e.target.value; render(); });
 
+// Filtro Disciplina → Distancia
+const DISC = {
+  ruta:  { types: ["5K", "10K", "15K", "20K", "Media maratón", "Maratón"], dist: [["5K", "5 km"], ["10K", "10 km"], ["15K", "15 km"], ["20K", "20 km"], ["Media maratón", "Media maratón (21 km)"], ["Maratón", "Maratón (42 km)"]] },
+  trail: { types: ["Trail"], dist: [["corto", "Corto (menos de 21 km)"], ["medio", "Media distancia (21-44 km)"], ["ultra", "Ultra (más de 44 km)"]] },
+  tri:   { types: ["Sprint", "Olímpico", "Medio Ironman", "Ironman"], dist: [["Sprint", "Sprint"], ["Olímpico", "Olímpico"], ["Medio Ironman", "Medio Ironman / 70.3"], ["Ironman", "Ironman"]] },
+  hyrox: { types: ["HYROX"], dist: [] }
+};
+function trailBucket(r) {
+  const m = String(r.distance || "").replace(",", ".").match(/(\d+(?:\.\d+)?)\s*k/i);
+  if (!m) return "";
+  const k = +m[1];
+  return k < 21 ? "corto" : k <= 44 ? "medio" : "ultra";
+}
+(() => {
+  const disc = document.getElementById("discSel"), dist = document.getElementById("distSel");
+  disc.addEventListener("change", () => {
+    const g = DISC[disc.value];
+    state.types = new Set(g ? g.types : []); state.trail = "";
+    dist.hidden = !g || !g.dist.length;
+    dist.innerHTML = g ? `<option value="">Todas las distancias</option>` + g.dist.map(([v, t]) => `<option value="${esc(v)}">${esc(t)}</option>`).join("") : "";
+    render();
+  });
+  dist.addEventListener("change", () => {
+    const g = DISC[disc.value]; if (!g) return;
+    if (disc.value === "trail") state.trail = dist.value;
+    else state.types = new Set(dist.value ? [dist.value] : g.types);
+    render();
+  });
+})();
+
 // Filtro "Cerca de mí": ubicación del dispositivo o una ciudad escrita + radio
 (() => {
   const btn = document.getElementById("nearBtn"), panel = document.getElementById("nearPanel"),
@@ -32286,7 +32329,8 @@ async function geocodeCity(q) {
 
 // Quitar todos los filtros
 function clearFilters() {
-  Object.assign(state, { types: new Set(), fav: false, country: "", region: "", elev: "", q: "", past: false, month: null, mtype: "", near: null, day: "", mcont: "", mcountry: "", mregion: "" });
+  Object.assign(state, { types: new Set(), fav: false, country: "", region: "", elev: "", q: "", past: false, month: null, mtype: "", near: null, day: "", mcont: "", mcountry: "", mregion: "", trail: "" });
+  document.getElementById("discSel").value = ""; const ds = document.getElementById("distSel"); ds.hidden = true; ds.innerHTML = "";
   document.getElementById("q").value = "";
   for (const id of ["country", "region", "elev"]) document.getElementById(id).value = "";
   document.getElementById("showPast").checked = false;
