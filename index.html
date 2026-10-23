@@ -332,7 +332,11 @@ body { padding-block: 0 64px; }
 
 #home { display: grid; gap: 22px; }
 /* Versión pública: oculta lo que depende de Claude */
-.public .tabs a[data-view="corredores"], .public .tabs a[data-view="perfil"], .public .fb, .public .only-claude { display: none !important; }
+.public .tabs a[data-view="corredores"], .public .tabs a[data-view="perfil"], .public:not(.has-form) .fb, .public .only-claude { display: none !important; }
+.fb-opts a { font: 500 14px var(--font-body); text-decoration: none; color: var(--ink); padding: 8px 10px; border-radius: 6px; display: flex; justify-content: space-between; }
+.fb-opts a:hover { background: var(--chip); }
+.fb-opts a:focus-visible { outline: 2px solid var(--tri); outline-offset: 2px; }
+.fb-note { font-size: 12px; color: var(--muted); margin: 0; padding: 0 10px 4px; }
 .sub-box { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .sub-btn { display: inline-flex; align-items: center; gap: 6px; font: 700 14px var(--font-body); text-decoration: none; padding: 9px 16px; border-radius: 999px; background: #fff; color: #16201c; }
 .sub-btn.alt { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.3); }
@@ -418,10 +422,6 @@ footer p { margin: 0; }
     <p class="lede">Carreras a pie, trail, triatlones (de sprint a Ironman) y HYROX. Cada ficha indica cuándo abren las inscripciones, cuándo es la prueba y de qué va. Pulsa una ficha para ver todos sus datos y marca con ★ las que te interesen.</p>
   </header>
 
-  <section class="alerts" aria-labelledby="alerts-h">
-    <h2 id="alerts-h">Próximos avisos · 60 días</h2>
-    <div class="alert-list" id="alerts"></div>
-  </section>
 
   <div class="filters" role="group" aria-label="Filtros">
     <div id="typeChips" style="display:flex;flex-wrap:wrap;gap:6px"></div>
@@ -12347,7 +12347,9 @@ const RACES = [
 ;
 // Versión pública (web propia, sin Claude): sin perfiles, sugerencias ni fotos; con suscripción al .ics
 const PUBLIC = true;
+const FORM = /*FORM*/null;   // formulario de Google para sugerencias en la versión pública
 if (PUBLIC) document.documentElement.classList.add("public");
+if (PUBLIC && FORM) document.documentElement.classList.add("has-form");
 const UPDATED = "23/10/2026";
 
 const MONTHS = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
@@ -12833,6 +12835,7 @@ function card(r) {
 }
 
 function alerts() {
+  if (!document.getElementById("alerts")) return;   // sección retirada del calendario (está en Inicio)
   const ev = [];
   for (const r of RACES) {
     if (state.fav && !favs.has(r.id)) continue;
@@ -13044,7 +13047,7 @@ prof.addEventListener("change", async e => {
   const showOpts = () => { opts.hidden = false; form.hidden = true; };
   const toggle = open => {
     panel.hidden = !open; btn.setAttribute("aria-expanded", open);
-    if (open) { showOpts(); opts.querySelector("button").focus(); }
+    if (open) { showOpts(); opts.querySelector("button, a")?.focus(); }
   };
   btn.addEventListener("click", () => toggle(panel.hidden));
   document.addEventListener("click", e => { if (!panel.hidden && !e.target.closest(".fb")) toggle(false); });
@@ -13056,6 +13059,17 @@ prof.addEventListener("change", async e => {
     opts.hidden = true; form.hidden = false; say(""); text.focus();
   });
   document.getElementById("fbChange").addEventListener("click", showOpts);
+  // Versión pública: cada opción abre el formulario de Google con el tipo ya elegido
+  if (PUBLIC) {
+    if (!FORM) return;
+    const labels = { "Mejora del calendario": "Mejora de la web" };
+    opts.innerHTML = [...opts.querySelectorAll("[data-kind]")].map(b => {
+      const kind = labels[b.dataset.kind] || b.dataset.kind;
+      const url = `${FORM.formUrl}?usp=pp_url&${FORM.entryKind}=${encodeURIComponent(kind)}`;
+      return `<a role="menuitem" href="${esc(url)}" target="_blank" rel="noopener">${esc(b.textContent)} <span aria-hidden="true">↗</span></a>`;
+    }).join("") + `<p class="fb-note">Se abre un formulario de Google. No hace falta cuenta.</p>`;
+    return;
+  }
   const db = window.claude?.use ? await window.claude.use("db") : null;
   if (!db) {
     send.disabled = true; text.disabled = true;
