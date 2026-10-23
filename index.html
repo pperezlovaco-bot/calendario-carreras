@@ -429,6 +429,8 @@ html, body { overflow-x: clip; }
 .dd-opt .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--c); flex: none; }
 .dd-sep { font: 700 11px var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 8px 10px 2px; }
 .dd-pop:not(.searching) .only-search { display: none; }
+.dd-opt.dd-back { color: var(--run); font-weight: 600; }
+li.has-sub .dd-opt b::after { content: " ›"; }
 
 /* Paso a paso dentro del mes */
 .crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
@@ -32132,10 +32134,17 @@ function render() {
       <div class="dd-pop" ${ddOpen === id ? "" : "hidden"}>${ph ? `<input class="dd-search" data-ddsearch placeholder="${ph}" autocomplete="off">` : ""}<ul class="dd-list">${list}</ul></div>
     </div>`;
     const allCountries = tally(all, r => r.country);
-    const whereList = opt("cont", "", all.length, state.mcont, "Todo el mundo")
-      + fullList(Object.keys(CONTINENT), conts.filter(([c]) => c !== "Otros")).map(([c, n]) => opt("cont", c, n, state.mcont)).join("")
-      + `<li class="dd-sep only-search">Países</li>`
-      + fullList(Object.values(CONTINENT).flat(), allCountries).map(([c, n]) => opt("place", c, n, state.mcountry, c, "", "only-search")).join("");
+    const searchCountries = `<li class="dd-sep only-search">Otros países</li>` + fullList(Object.values(CONTINENT).flat(), allCountries).filter(([c]) => CONT_OF[c] !== state.mcont).map(([c, n]) => opt("place", c, n, state.mcountry, c, "", "only-search")).join("");
+    const whereList = state.mcont && CONTINENT[state.mcont]
+      // Dentro de un continente: volver, todo el continente y sus países
+      ? `<li><button type="button" class="dd-opt dd-back" data-ddback>← Continentes</button></li>`
+        + opt("contall", state.mcont, inCont.length, state.mcountry ? "" : state.mcont, `Todo ${state.mcont}`)
+        + fullList(CONTINENT[state.mcont], countries).map(([c, n]) => opt("place", c, n, state.mcountry)).join("")
+        + searchCountries
+      : opt("cont", "", all.length, state.mcont, "Todo el mundo")
+        + fullList(Object.keys(CONTINENT), conts.filter(([c]) => c !== "Otros")).map(([c, n]) => opt("cont", c, n, state.mcont, c, "", "has-sub")).join("")
+        + `<li class="dd-sep only-search">Países</li>`
+        + fullList(Object.values(CONTINENT).flat(), allCountries).map(([c, n]) => opt("place", c, n, state.mcountry, c, "", "only-search")).join("");
     const countryList = opt("country", "", inCont.length, state.mcountry, `Todo ${state.mcont}`)
       + fullList(CONTINENT[state.mcont] || [], countries).map(([c, n]) => opt("country", c, n, state.mcountry)).join("");
     const regionList = opt("region", "", inCountry.length, state.mregion, "Toda España")
@@ -32187,10 +32196,12 @@ document.getElementById("timeline").addEventListener("click", e => {
   if (mt) { state.month = mt.dataset.month; ddOpen = null; Object.assign(state, { mcont: "", mcountry: "", mregion: "", mtype: "" }); render(); window.scrollTo(0, 0); return; }
   const tg = e.target.closest("[data-ddtoggle]");
   if (tg) { ddOpen = ddOpen === tg.dataset.ddtoggle ? null : tg.dataset.ddtoggle; render(); return; }
+  if (e.target.closest("[data-ddback]")) { Object.assign(state, { mcont: "", mcountry: "", mregion: "" }); render(); return; }
   const pk = e.target.closest("[data-pick]");
   if (pk) {
     const v = pk.dataset.v, lv = pk.dataset.pick;
-    if (lv === "cont") Object.assign(state, { mcont: v, mcountry: "", mregion: "" });
+    if (lv === "cont") { Object.assign(state, { mcont: v, mcountry: "", mregion: "" }); if (v) { render(); return; } }   // se queda abierto mostrando sus países
+    if (lv === "contall") Object.assign(state, { mcountry: "", mregion: "" });
     if (lv === "place") Object.assign(state, { mcont: CONT_OF[v] || "", mcountry: v, mregion: "" });
     if (lv === "country") Object.assign(state, { mcountry: v, mregion: "" });
     if (lv === "region") state.mregion = v;
