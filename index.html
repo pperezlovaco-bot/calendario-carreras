@@ -1377,7 +1377,7 @@ function renderRace() {
     <div class="rx-grid">
       <section class="rx-card">
         <h3>🗺️ Recorrido</h3>
-        <p class="rx-lead">${esc(r.summary)}</p>
+        <p class="rx-lead">${r.summary ? esc(r.summary) : DETAIL_DONE.has(r.date.slice(0, 7)) || Array.isArray(PACKED) ? "" : '<span class="hint">Cargando detalles…</span>'}</p>
         ${course ? `<div class="rx-chips">${course}</div>` : ""}
         ${route}
         ${dt.segments ? `<p class="rx-small">${esc(dt.segments)}</p>` : ""}
@@ -1668,11 +1668,11 @@ function tripHtml(r) {
 }
 
 // Detalle por mes (datos/AAAA-MM.json): resumen, ficha, enlace, precio... se carga la primera vez que se abre una carrera de ese mes
-const DETAIL = {};
+const DETAIL = {}, DETAIL_DONE = new Set();
 function ensureDetails(r) {
   const m = r.date.slice(0, 7);
   if (!DETAIL[m]) DETAIL[m] = fetch(`datos/${m}.json`).then(res => res.ok ? res.json() : {}).catch(() => ({}))
-    .then(obj => { for (const [id, h] of Object.entries(obj)) if (RACE[id]) Object.assign(RACE[id], h); return true; });
+    .then(obj => { for (const [id, h] of Object.entries(obj)) if (RACE[id]) Object.assign(RACE[id], h); DETAIL_DONE.add(m); return true; });
   return DETAIL[m];
 }
 function openRace(id) {
