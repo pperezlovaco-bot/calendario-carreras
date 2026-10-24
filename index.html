@@ -632,6 +632,78 @@ li.has-sub .dd-opt b::after { content: " ›"; }
 .pf-years { display: flex; flex-wrap: wrap; gap: 6px; }
 .prof .dcard { border-top: 5px solid var(--c, var(--line)); }
 
+/* Perfil estilo Instagram */
+.prof.ig { max-width: 935px; margin: 0 auto; width: 100%; }
+.ig-head { display: grid; gap: 18px; padding: 8px 0 4px; }
+.ig-top { display: grid; grid-template-columns: auto 1fr; gap: clamp(18px, 6vw, 60px); align-items: center; }
+.ig-ring { width: clamp(86px, 18vw, 150px); aspect-ratio: 1; border-radius: 50%; padding: 4px; background: conic-gradient(from 200deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5, #feda75); display: grid; place-items: center; max-width: 100%; }
+.ig-ring img, .ig-ring span { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid #fff; background: var(--chip); display: grid; place-items: center; font-size: clamp(34px, 7vw, 60px); }
+.ig-ring.sm { width: 36px; padding: 2px; }
+.ig-ring.sm img, .ig-ring.sm span { border-width: 2px; font-size: 16px; }
+.ig-main { display: grid; gap: 12px; min-width: 0; }
+.ig-name { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.ig-name h2 { margin: 0; font: 600 clamp(22px, 3.5vw, 28px) var(--font-body); text-transform: none; }
+.ig-btn { font: 600 14px var(--font-body); background: var(--chip); color: var(--ink); border: 0; border-radius: 8px; padding: 7px 16px; cursor: pointer; }
+.ig-btn:hover { background: var(--line); }
+.ig-btn.primary { background: #0095f6; color: #fff; }
+.ig-counts { display: flex; flex-wrap: wrap; gap: clamp(16px, 4vw, 40px); font-size: 16px; }
+.ig-counts b { font-weight: 700; }
+.ig-bio { margin: 0; white-space: pre-line; max-width: 46ch; }
+.ig-bio-form { display: grid; gap: 8px; max-width: 420px; }
+.ig-bio-form textarea { font: 15px var(--font-body); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; resize: vertical; }
+.ig-nextpill { justify-self: start; font: 500 13px var(--font-body); background: color-mix(in srgb, var(--run) 10%, #fff); color: var(--ink); border: 1px solid color-mix(in srgb, var(--run) 30%, var(--line)); border-radius: 999px; padding: 6px 14px; cursor: pointer; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ig-highlights { display: flex; gap: 18px; overflow-x: auto; padding: 4px 2px 8px; }
+.ig-hl { display: grid; justify-items: center; gap: 6px; flex: none; width: 74px; }
+.ig-hl span { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font-size: 30px; background: #fff; box-shadow: 0 0 0 2px var(--line), inset 0 0 0 3px #fff; border: 2px solid transparent; background-image: linear-gradient(#fafafa, #fafafa), conic-gradient(#feda75, #fa7e1e, #d62976, #962fbf, #feda75); background-origin: border-box; background-clip: padding-box, border-box; }
+.ig-hl small { font-size: 12px; text-align: center; line-height: 1.2; }
+.ig-hl.off { opacity: .5; }
+.ig-tabs { display: flex; justify-content: center; gap: clamp(20px, 7vw, 60px); border-top: 1px solid var(--line); }
+.ig-tabs button { display: flex; align-items: center; gap: 6px; border: 0; background: none; padding: 14px 2px; margin-top: -1px; border-top: 1px solid transparent; font: 600 12px var(--font-body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); cursor: pointer; }
+.ig-tabs button[aria-selected="true"] { color: var(--ink); border-top-color: var(--ink); }
+.ig-tabs button span { font-size: 15px; letter-spacing: 0; }
+.ig-tabs button:focus-visible { outline: 2px solid var(--tri); outline-offset: 2px; }
+@media (max-width: 560px) { .ig-tabs button em { display: none; } .ig-tabs button span { font-size: 20px; } }
+.ig-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.ig-tile { position: relative; aspect-ratio: 1; max-width: 100%; border: 0; padding: 10px; cursor: pointer; overflow: hidden; color: #fff; text-align: left; font: inherit;
+  background-color: var(--c); background-size: cover; background-position: center; display: grid; align-content: end; gap: 2px; }
+.ig-tile:not([style*="background-image"]) { background-image: linear-gradient(160deg, rgba(255,255,255,.18), transparent 60%), repeating-linear-gradient(135deg, rgba(255,255,255,.07) 0 14px, transparent 14px 28px); }
+.ig-tile-type { font: 700 10px var(--font-mono); text-transform: uppercase; letter-spacing: .06em; opacity: .9; }
+.ig-tile-name { font: 800 clamp(13px, 2.2vw, 19px)/1.05 var(--font-display); text-transform: uppercase; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.ig-multi { position: absolute; top: 8px; right: 10px; font-style: normal; font-size: 18px; text-shadow: 0 1px 3px rgba(0,0,0,.5); }
+.ig-tile-hover { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 4px; padding: 8px; background: rgba(0,0,0,.45); opacity: 0; transition: opacity .15s; }
+.ig-tile-hover b { font-size: 15px; } .ig-tile-hover small { font-size: 12px; }
+.ig-tile:hover .ig-tile-hover, .ig-tile:focus-visible .ig-tile-hover { opacity: 1; }
+.ig-tile:focus-visible { outline: 3px solid var(--tri); outline-offset: -3px; }
+.ig-add { --c: var(--chip); color: var(--muted); place-content: center; justify-items: center; background-image: none !important; border: 2px dashed var(--line); }
+.ig-add span { font-size: 40px; line-height: 1; } .ig-add small { font-weight: 600; }
+.ig-modal { position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,.72); display: grid; place-items: center; padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.ig-post { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(280px, 1fr); width: min(980px, 100%); max-height: calc(100vh - 40px); background: #fff; border-radius: 6px; overflow: hidden; }
+@media (max-width: 760px) { .ig-post { grid-template-columns: 1fr; overflow-y: auto; } .ig-media { min-height: 300px; } }
+.ig-media { position: relative; background-color: var(--c); background-size: contain; background-repeat: no-repeat; background-position: center; min-height: 420px; }
+.ig-media:not([style*="background-image"]) { background-image: repeating-linear-gradient(135deg, rgba(255,255,255,.08) 0 16px, transparent 16px 32px); }
+.ig-media-empty { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 6px; color: #fff; padding: 20px; }
+.ig-media-empty span { font: 700 12px var(--font-mono); text-transform: uppercase; }
+.ig-media-empty b { font: 800 clamp(26px, 4vw, 40px)/1 var(--font-display); text-transform: uppercase; }
+.ig-media-empty small { opacity: .85; }
+.ig-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 34px; height: 34px; border-radius: 50%; border: 0; background: rgba(255,255,255,.85); font-size: 22px; cursor: pointer; }
+.ig-nav.prev { left: 10px; } .ig-nav.next { right: 10px; }
+.ig-dots { position: absolute; bottom: 12px; left: 0; right: 0; display: flex; justify-content: center; gap: 4px; }
+.ig-dots i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.5); } .ig-dots i.on { background: #fff; }
+.ig-side { display: grid; grid-template-rows: auto 1fr auto; min-height: 0; }
+.ig-side header { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.ig-side header b { flex: 1; }
+.ig-x { border: 0; background: none; font-size: 18px; cursor: pointer; color: var(--muted); }
+.ig-caption { padding: 14px; display: grid; gap: 8px; align-content: start; overflow-y: auto; }
+.ig-caption h4 { margin: 0; font: 800 24px/1.05 var(--font-display); text-transform: uppercase; }
+.ig-caption .meta { font-size: 13px; color: var(--muted); }
+.ig-caption p { margin: 0; }
+.ig-time { font: 700 18px var(--font-mono); color: var(--ok); }
+.ig-link { justify-self: start; border: 0; background: none; color: #0095f6; font: 600 14px var(--font-body); cursor: pointer; padding: 0; }
+.ig-side .edit { border-top: 1px solid var(--line); }
+.ig-addbox { grid-template-columns: 1fr; width: min(560px, 100%); }
+.ig-addbox .addrace { box-shadow: none; border: 0; border-radius: 0; }
+.ig .pf-body .prow { border-left: 4px solid var(--c); }
+
 /* Calendario por meses */
 .months { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
 .month-tile { display: grid; gap: 2px; text-align: left; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; cursor: pointer; box-shadow: var(--shadow); min-width: 0; }
@@ -1013,7 +1085,7 @@ function photosHtml(e, mine) {
   return `<div class="photos ${ph.length === 1 ? "single" : ""}">${ph.map(id => `<figure><img src="/_blob/${id}" alt="Foto de ${esc(e.name)}" loading="lazy" data-zoom>${mine ? `<button class="rm" data-rmphoto="${id}" data-id="${esc(e.id)}" aria-label="Quitar foto">×</button>` : ""}</figure>`).join("")}</div>`;
 }
 
-let profTab = "resumen", profYear = "";
+let profTab = "grid", profYear = "", profPost = null, profPhotoIdx = 0, profAdd = false, profEditBio = false;
 function renderProfile() {
   const el = document.getElementById("profile");
   const uid = viewPerson || ME.id;
@@ -1036,6 +1108,7 @@ function renderProfile() {
   const fv = favIds.filter(id => RACE[id] && !marked.has(id) && days(RACE[id].date) >= 0)
     .map(id => RACE[id]).sort((a, b) => a.date.localeCompare(b.date));
   const p = ME.people[uid];
+  const bio = ME.profiles[uid]?.bio || "";
 
   // --- Cifras ---
   const DEF_KM = { "5K": 5, "10K": 10, "15K": 15, "20K": 20, "Media maratón": 21.1, "Maratón": 42.2 };
@@ -1049,141 +1122,166 @@ function renderProfile() {
   const countries = new Set(dn.map(e => e.country).filter(Boolean));
   const toSec = t => { const m = String(t || "").trim().match(/^(?:(\d+):)?(\d{1,2}):(\d{2})$/); return m ? (+(m[1] || 0)) * 3600 + (+m[2]) * 60 + (+m[3]) : null; };
   const fmtSec = s => { const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60; return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(x).padStart(2, "0"); };
-  const pbs = ["5K", "10K", "15K", "Media maratón", "Maratón"].map(t => {
-    const best = dn.filter(e => e.type === t && toSec(e.time)).sort((a, b) => toSec(a.time) - toSec(b.time))[0];
-    return [t, best];
-  });
+  const pbs = ["5K", "10K", "15K", "Media maratón", "Maratón"].map(t => [t, dn.filter(e => e.type === t && toSec(e.time)).sort((a, b) => toSec(a.time) - toSec(b.time))[0]]);
   const has = f => dn.some(f);
   const LOGROS = [
-    ["🏁", "Primera carrera", "Termina tu primera carrera", dn.length >= 1],
+    ["🏁", "Debut", "Termina tu primera carrera", dn.length >= 1],
     ["🔟", "10 carreras", "Termina 10 carreras", dn.length >= 10],
     ["🏆", "25 carreras", "Termina 25 carreras", dn.length >= 25],
-    ["🥈", "Medio maratoniano", "Termina una media maratón", has(e => e.type === "Media maratón")],
-    ["🏅", "Maratoniano", "Termina un maratón", has(e => e.type === "Maratón")],
-    ["⛰️", "Montañero", "Termina un trail", has(e => e.type === "Trail")],
-    ["🏊", "Triatleta", "Termina un triatlón", has(e => TRI.has(e.type))],
+    ["🥈", "Media", "Termina una media maratón", has(e => e.type === "Media maratón")],
+    ["🏅", "Maratón", "Termina un maratón", has(e => e.type === "Maratón")],
+    ["⛰️", "Montaña", "Termina un trail", has(e => e.type === "Trail")],
+    ["🏊", "Triatlón", "Termina un triatlón", has(e => TRI.has(e.type))],
     ["🦾", "Ironman", "Termina un Ironman", has(e => e.type === "Ironman")],
     ["🔥", "HYROX", "Termina un HYROX", has(e => e.type === "HYROX")],
-    ["🌍", "Internacional", "Corre en 2 países", countries.size >= 2],
+    ["🌍", "Viajero", "Corre en 2 países", countries.size >= 2],
     ["🏔️", "1.000 m D+", "Acumula 1.000 m de desnivel", totalElev >= 1000],
     ["🛣️", "100 km", "Acumula 100 km en carreras", totalKm >= 100],
     ["📸", "Reportero", "Sube 5 fotos", nPhotos >= 5],
     ["⭐", "Planificador", "Marca 5 carreras con ★", favIds.length >= 5]
   ];
-  const nLogros = LOGROS.filter(l => l[3]).length;
-
-  // --- Gráficos ---
+  const got = LOGROS.filter(l => l[3]);
   const byType = TYPES.map(t => [t, dn.filter(e => e.type === t).length]).filter(([, n]) => n);
   const maxType = Math.max(1, ...byType.map(([, n]) => n));
   const months = []; for (let i = 11; i >= 0; i--) { const x = new Date(today.getFullYear(), today.getMonth() - i, 1); months.push([x.getFullYear(), x.getMonth()]); }
   const kmMonth = months.map(([y, m]) => [MON[m], Math.round(dn.filter(e => { const x = d(e.date); return x.getFullYear() === y && x.getMonth() === m; }).reduce((s, e) => s + kmOf(e), 0))]);
   const maxKm = Math.max(1, ...kmMonth.map(([, k]) => k));
+  const colorOf = e => RACE[e.id] ? typeStyle(RACE[e.id]) : `--c:${TYPE_COLOR[e.type] || "var(--run)"}`;
+  const firstPhoto = e => (e.photos || []).find(id => ASSET_RE.test(id));
 
-  // --- Pestañas ---
-  const years = [...new Set(dn.map(e => e.date.slice(0, 4)))].sort().reverse();
-  const tab = profTab, yr = years.includes(profYear) ? profYear : "";
-  const dnShown = yr ? dn.filter(e => e.date.startsWith(yr)) : dn;
-  const next = up.find(e => days(e.date) >= 0);
-  const tabs = [["resumen", "Resumen"], ["proximas", `Próximas · ${up.length}`], ["terminadas", `Terminadas · ${dn.length}`], ["interesan", `Me interesan · ${fv.length}`]];
-
-  const hero = `<section class="pf-hero">
-      ${!mine ? `<button class="back pf-back" data-back>← Volver a corredores</button>` : ""}
-      <div class="pf-id">
-        ${p ? `<img src="${esc(p.avatarUrl)}" alt="">` : `<span class="pf-avatar">🏃</span>`}
-        <div><small>${mine ? "Tu perfil de corredor" : "Perfil de corredor"}</small><h2>${esc(pname(uid))}</h2>
-          <span class="pf-level">${dn.length >= 25 ? "Leyenda" : dn.length >= 10 ? "Veterano" : dn.length >= 3 ? "Corredor habitual" : dn.length ? "Debutante" : "Preparando su primera carrera"} · ${nLogros}/${LOGROS.length} logros</span></div>
+  // --- Cabecera estilo Instagram ---
+  const head = `<section class="ig-head">
+      ${!mine ? `<button class="back" data-back>← Volver a corredores</button>` : ""}
+      <div class="ig-top">
+        <div class="ig-ring">${p ? `<img src="${esc(p.avatarUrl)}" alt="">` : `<span>🏃</span>`}</div>
+        <div class="ig-main">
+          <div class="ig-name"><h2>${esc(pname(uid))}</h2>${mine ? `<button class="ig-btn" data-editbio>${bio ? "Editar perfil" : "Añadir bio"}</button>` : ""}</div>
+          <div class="ig-counts">
+            <span><b>${dn.length}</b> carreras</span>
+            <span><b>${totalKm.toLocaleString("es-ES")}</b> km</span>
+            <span><b>${countries.size}</b> ${countries.size === 1 ? "país" : "países"}</span>
+          </div>
+          ${profEditBio && mine ? `<form class="ig-bio-form" id="bioForm"><textarea name="bio" maxlength="160" rows="2" placeholder="Cuéntanos algo: tu club, tu próximo reto…">${esc(bio)}</textarea><button class="ig-btn primary" type="submit">Guardar</button></form>`
+            : `<p class="ig-bio">${bio ? esc(bio) : mine ? "<span class='hint'>Añade una bio: tu club, tu distancia favorita, tu próximo reto…</span>" : ""}</p>`}
+          ${up[0] ? `<button class="ig-nextpill" data-open="${esc(up[0].id)}">📅 Próxima: <b>${esc(up[0].name)}</b> · ${days(up[0].date) >= 0 ? inDays(days(up[0].date)) : fmt(up[0].date)}</button>` : ""}
+        </div>
       </div>
-      <div class="pf-stats">
-        <div><b>${dn.length}</b><span>terminadas</span></div>
-        <div><b>${totalKm.toLocaleString("es-ES")}</b><span>km en carreras</span></div>
-        <div><b>${totalElev.toLocaleString("es-ES")}</b><span>m de desnivel</span></div>
-        <div><b>${countries.size}</b><span>${countries.size === 1 ? "país" : "países"}</span></div>
-        <div><b>${up.length}</b><span>próximas</span></div>
+      <div class="ig-highlights">
+        ${got.length ? got.map(([i, t, dsc]) => `<div class="ig-hl" title="${esc(dsc)}"><span>${i}</span><small>${t}</small></div>`).join("") : `<div class="ig-hl off"><span>🏁</span><small>Tu primer logro</small></div>`}
       </div>
     </section>`;
 
-  const nextCard = next ? `<button class="pf-next" data-open="${esc(next.id)}" style="${RACE[next.id] ? typeStyle(RACE[next.id]) : ""}">
-      <span class="pf-next-l">Tu próxima carrera</span>
-      <b>${esc(next.name)}</b>
-      <span>${fmt(next.date)} · ${esc(next.city || "")} · ${esc(next.type || "")}</span>
-      <span class="pf-count"><b>${days(next.date)}</b> ${days(next.date) === 1 ? "día" : "días"}</span>
-    </button>` : `<div class="pf-next empty-next"><span class="pf-next-l">Tu próxima carrera</span><b>Todavía no tienes ninguna</b><span>Marca con ★ las que te interesen y pulsa «Voy» en «Me interesan».</span></div>`;
+  const tabs = [["grid", "▦", "Carreras"], ["proximas", "📅", "Próximas"], ["interesan", "★", "Me interesan"], ["stats", "📊", "Estadísticas"]];
+  const tabBar = `<nav class="ig-tabs" role="tablist">${tabs.map(([k, i, t]) => `<button role="tab" data-ptab="${k}" aria-selected="${profTab === k}" title="${t}"><span>${i}</span><em>${t}</em></button>`).join("")}</nav>`;
 
-  const resumen = `${nextCard}
-    <div class="pf-grid">
+  // --- Cuadrícula de publicaciones ---
+  const tile = e => {
+    const ph = firstPhoto(e), n = (e.photos || []).length;
+    return `<button class="ig-tile" data-post="${esc(e.id)}" style="${colorOf(e)}${ph ? `;background-image:url(/_blob/${ph})` : ""}">
+      ${ph ? "" : `<span class="ig-tile-type">${esc(e.type || "")}</span><span class="ig-tile-name">${esc(e.name)}</span>`}
+      ${n > 1 ? `<i class="ig-multi" aria-hidden="true">❐</i>` : ""}
+      <span class="ig-tile-hover"><b>${e.time ? "⏱️ " + esc(e.time) : esc(e.name)}</b><small>${fmt(e.date)}${n ? ` · 📸 ${n}` : ""}</small></span>
+    </button>`;
+  };
+  const grid = `<div class="ig-grid">
+      ${mine ? `<button class="ig-tile ig-add" data-addpost><span>＋</span><small>Añadir carrera</small></button>` : ""}
+      ${dn.map(tile).join("")}
+    </div>
+    ${!dn.length && !mine ? `<p class="hint">Aún no ha terminado ninguna carrera.</p>` : ""}`;
+
+  const rowList = (arr, isFav) => arr.length ? `<div class="plist">${arr.map(e => `<div class="prow" style="${colorOf(e)}">
+      <span class="d">${fmt(e.date)}</span>
+      <span class="n"><b>${esc(e.name)}</b><span>${esc(e.type || "")} · ${esc(e.city || "")} · ${days(e.date) >= 0 ? inDays(days(e.date)) : "ya pasó"}</span></span>
+      ${mine ? (isFav ? `<span class="row" style="display:flex;gap:6px"><button class="btn ghost" data-favgo="${esc(e.id)}">Voy</button><button class="btn ghost" data-unfav="${esc(e.id)}">Quitar ★</button></span>`
+        : `<span class="row" style="display:flex;gap:6px"><button class="btn ghost" data-mark="hecha" data-id="${esc(e.id)}">Ya la hice</button><button class="btn ghost" data-rm="${esc(e.id)}">Quitar</button></span>`) : "<span></span>"}
+    </div>`).join("")}</div>` : `<p class="hint">${isFav ? (mine ? "Marca con ★ las carreras del calendario que te interesen." : "Ninguna marcada.") : (mine ? "No tienes carreras próximas. Pulsa «Voy» en «Me interesan»." : "Sin carreras próximas.")}</p>`;
+
+  const stats = `<div class="pf-grid">
       <section class="pf-card"><h3>⏱️ Mejores marcas</h3>
         <div class="pf-pbs">${pbs.map(([t, b]) => `<div class="${b ? "" : "na"}" style="--c:${TYPE_COLOR[t]}"><small>${t}</small><b>${b ? esc(fmtSec(toSec(b.time))) : "—"}</b><span>${b ? esc(b.name) : "Sin marca"}</span></div>`).join("")}</div>
-        ${mine ? `<p class="hint">Añade tu tiempo en cada carrera terminada (pestaña «Terminadas»).</p>` : ""}
       </section>
-      <section class="pf-card"><h3>🏅 Logros <small>${nLogros}/${LOGROS.length}</small></h3>
+      <section class="pf-card"><h3>🏅 Logros <small>${got.length}/${LOGROS.length}</small></h3>
         <div class="pf-badges">${LOGROS.map(([i, t, dsc, ok]) => `<div class="pf-badge ${ok ? "ok" : ""}" title="${esc(dsc)}"><i>${i}</i><b>${t}</b><span>${ok ? "¡Conseguido!" : esc(dsc)}</span></div>`).join("")}</div>
       </section>
       <section class="pf-card"><h3>📊 Por disciplina</h3>
         ${byType.length ? `<div class="pf-bars">${byType.map(([t, n]) => `<div><span>${t}</span><i style="--c:${TYPE_COLOR[t]};width:${(n / maxType * 100).toFixed(0)}%"></i><b>${n}</b></div>`).join("")}</div>` : `<p class="hint">Aquí verás tus carreras por disciplina.</p>`}
       </section>
-      <section class="pf-card"><h3>📈 Km por mes <small>últimos 12 meses</small></h3>
+      <section class="pf-card"><h3>📈 Km por mes <small>últimos 12 meses · ${totalElev.toLocaleString("es-ES")} m D+ en total</small></h3>
         <div class="pf-cols">${kmMonth.map(([m, k]) => `<div title="${k} km"><i style="height:${(k / maxKm * 100).toFixed(0)}%"></i><span>${m}</span></div>`).join("")}</div>
       </section>
     </div>`;
 
-  const proximas = up.length ? `<div class="plist">${up.map(e => `<div class="prow">
-      <span class="d">${fmt(e.date)}</span>
-      <span class="n"><b>${esc(e.name)}</b><span>${esc(e.type || "")} · ${esc(e.city || "")} · ${days(e.date) >= 0 ? inDays(days(e.date)) : "ya pasó"}</span></span>
-      ${mine ? `<span class="row" style="display:flex;gap:6px"><button class="btn ghost" data-mark="hecha" data-id="${esc(e.id)}">Ya la hice</button><button class="btn ghost" data-rm="${esc(e.id)}">Quitar</button></span>` : "<span></span>"}
-    </div>`).join("")}</div>` : `<p class="hint">${mine ? "No tienes carreras próximas. Marca con ★ las que te interesen y pulsa «Voy» en la pestaña «Me interesan»." : "Sin carreras próximas."}</p>`;
-
-  const terminadas = `${years.length > 1 ? `<div class="pf-years"><button class="chip" data-pyear="" aria-pressed="${!yr}">Todas</button>${years.map(y => `<button class="chip" data-pyear="${y}" aria-pressed="${yr === y}">${y}</button>`).join("")}</div>` : ""}
-    ${dnShown.length ? `<div class="done">${dnShown.map(e => `<article class="dcard" style="${RACE[e.id] ? typeStyle(RACE[e.id]) : ""}">
-      ${photosHtml(e, mine)}
-      <div class="dbody">
-        <h4>${esc(e.name)}</h4>
-        <span class="meta">${fmt(e.date)} · ${esc(e.city || "")} · ${esc(e.type || "")}${e.distance ? " · " + esc(e.distance) : ""}</span>
-        ${e.time ? `<span class="mark">⏱️ ${esc(e.time)}</span>` : ""}
-        ${e.note ? `<p class="note">${esc(e.note)}</p>` : ""}
-      </div>
-      ${mine ? `<form class="edit" data-edit="${esc(e.id)}">
-        <div class="row"><input name="time" maxlength="20" placeholder="Marca (ej. 1:45:30)" value="${esc(e.time || "")}" aria-label="Marca">
-        <input name="note" maxlength="300" placeholder="Comentario" value="${esc(e.note || "")}" aria-label="Comentario"></div>
-        <div class="row">
-          <button class="btn" type="submit">Guardar</button>
-          ${ME.assets ? `<label class="btn ghost" style="cursor:pointer">Añadir fotos<input type="file" accept="image/*" multiple hidden data-upload="${esc(e.id)}"></label>` : ""}
-          <button class="btn ghost" type="button" data-rm="${esc(e.id)}">Quitar</button>
+  // --- Publicación ampliada (modal) ---
+  const post = profPost && dn.find(e => e.id === profPost);
+  let modal = "";
+  if (post) {
+    const ph = (post.photos || []).filter(id => ASSET_RE.test(id));
+    const idx = Math.min(profPhotoIdx, Math.max(0, ph.length - 1));
+    modal = `<div class="ig-modal" data-closepost>
+      <article class="ig-post" style="${colorOf(post)}">
+        <div class="ig-media" style="${ph.length ? `background-image:url(/_blob/${ph[idx]})` : ""}">
+          ${ph.length ? "" : `<div class="ig-media-empty"><span>${esc(post.type || "")}</span><b>${esc(post.name)}</b>${mine ? `<small>Sube una foto de esta carrera</small>` : ""}</div>`}
+          ${ph.length > 1 ? `<button class="ig-nav prev" data-pphoto="${(idx - 1 + ph.length) % ph.length}" aria-label="Foto anterior">‹</button><button class="ig-nav next" data-pphoto="${(idx + 1) % ph.length}" aria-label="Foto siguiente">›</button>
+            <div class="ig-dots">${ph.map((_, i) => `<i class="${i === idx ? "on" : ""}"></i>`).join("")}</div>` : ""}
         </div>
-        ${ME.assets ? "" : `<p class="hint">Para subir fotos necesitas acceso de colaborador a la página.</p>`}
-      </form>` : ""}
-    </article>`).join("")}</div>` : `<p class="hint">${mine ? "Aún no has marcado carreras terminadas. Añádelas aquí abajo." : "Aún no ha terminado ninguna."}</p>`}
-    ${mine ? `<form class="addrace" id="addPast">
-      <h3>Marcar una carrera que ya hiciste</h3>
-      <div class="row">
-        <input id="pastPick" name="pick" list="pastRaces" required placeholder="Escribe para buscar (ej. Maratón de Sevilla 2026)" aria-label="Carrera ya celebrada">
-        <button class="btn" type="submit">Marcar como hecha</button>
-      </div>
-      <datalist id="pastRaces">${RACES.filter(r => days(r.date) < 0 && !marked.has(r.id)).sort((a, b) => b.date.localeCompare(a.date)).map(r => `<option value="${esc(r.name)} · ${fmt(r.date)}"></option>`).join("")}</datalist>
-    </form>
-    <form class="addrace" id="addRace">
-      <h3>Añadir una carrera que no está en el calendario</h3>
-      <div class="row">
-        <input id="addName" name="name" required maxlength="120" placeholder="Nombre de la carrera" aria-label="Nombre">
-        <input id="addDate" name="date" type="date" required aria-label="Fecha">
-      </div>
-      <div class="row">
-        <select name="type" aria-label="Tipo">${TYPES.map(t => `<option>${t}</option>`).join("")}</select>
-        <input name="city" maxlength="80" placeholder="Ciudad" aria-label="Ciudad">
-        <button class="btn" type="submit">Añadir</button>
-      </div>
-      <p class="hint">Si la fecha ya pasó se guarda como terminada; si no, como próxima.</p>
-    </form>` : ""}`;
+        <div class="ig-side">
+          <header><div class="ig-ring sm">${p ? `<img src="${esc(p.avatarUrl)}" alt="">` : `<span>🏃</span>`}</div><b>${esc(pname(uid))}</b><button class="ig-x" data-closepost aria-label="Cerrar">✕</button></header>
+          <div class="ig-caption">
+            <h4>${esc(post.name)}</h4>
+            <span class="meta">📍 ${esc(post.city || "")} · ${fmt(post.date)} · ${esc(post.type || "")}${post.distance ? " · " + esc(post.distance) : ""}</span>
+            ${post.time ? `<span class="ig-time">⏱️ ${esc(post.time)}</span>` : ""}
+            ${post.note ? `<p>${esc(post.note)}</p>` : ""}
+            ${RACE[post.id] ? `<button class="ig-link" data-open="${esc(post.id)}">Ver ficha de la carrera →</button>` : ""}
+          </div>
+          ${mine ? `<form class="edit" data-edit="${esc(post.id)}">
+            <div class="row"><input name="time" maxlength="20" placeholder="Tu marca (ej. 1:45:30)" value="${esc(post.time || "")}" aria-label="Marca">
+            <input name="note" maxlength="300" placeholder="Escribe un comentario…" value="${esc(post.note || "")}" aria-label="Comentario"></div>
+            <div class="row">
+              <button class="btn" type="submit">Guardar</button>
+              ${ME.assets ? `<label class="btn ghost" style="cursor:pointer">📷 Añadir fotos<input type="file" accept="image/*" multiple hidden data-upload="${esc(post.id)}"></label>` : ""}
+              ${ph.length ? `<button class="btn ghost" type="button" data-rmphoto="${ph[idx]}" data-id="${esc(post.id)}">Quitar esta foto</button>` : ""}
+              <button class="btn ghost" type="button" data-rm="${esc(post.id)}">Eliminar</button>
+            </div>
+          </form>` : ""}
+        </div>
+      </article>
+    </div>`;
+  }
 
-  const interesan = fv.length ? `<div class="plist">${fv.map(r => `<div class="prow">
-      <span class="d">${fmt(r.date)}</span>
-      <span class="n"><b>${esc(r.name)}</b><span>${esc(r.type)} · ${esc(r.city)} · ${inDays(days(r.date))} · ${status(r)[1]}</span></span>
-      ${mine ? `<span class="row" style="display:flex;gap:6px"><button class="btn ghost" data-favgo="${esc(r.id)}">Voy</button><button class="btn ghost" data-unfav="${esc(r.id)}">Quitar ★</button></span>` : "<span></span>"}
-    </div>`).join("")}</div>` : `<p class="hint">${mine ? "Marca con ★ las carreras del calendario que te interesen y aparecerán aquí." : "Ninguna marcada."}</p>`;
+  // --- Añadir carrera (modal) ---
+  const addModal = profAdd && mine ? `<div class="ig-modal" data-closepost>
+      <article class="ig-post ig-addbox">
+        <div class="ig-side">
+          <header><b>Añadir una carrera terminada</b><button class="ig-x" data-closepost aria-label="Cerrar">✕</button></header>
+          <form class="addrace" id="addPast">
+            <h3>De las que ya están en el calendario</h3>
+            <div class="row">
+              <input id="pastPick" name="pick" list="pastRaces" required placeholder="Escribe para buscar (ej. Maratón de Sevilla 2026)" aria-label="Carrera ya celebrada">
+              <button class="btn" type="submit">Añadir</button>
+            </div>
+            <datalist id="pastRaces">${RACES.filter(r => days(r.date) < 0 && !marked.has(r.id)).sort((a, b) => b.date.localeCompare(a.date)).map(r => `<option value="${esc(r.name)} · ${fmt(r.date)}"></option>`).join("")}</datalist>
+          </form>
+          <form class="addrace" id="addRace">
+            <h3>Otra carrera</h3>
+            <div class="row">
+              <input id="addName" name="name" required maxlength="120" placeholder="Nombre de la carrera" aria-label="Nombre">
+              <input id="addDate" name="date" type="date" required aria-label="Fecha">
+            </div>
+            <div class="row">
+              <select name="type" aria-label="Tipo">${TYPES.map(t => `<option>${t}</option>`).join("")}</select>
+              <input name="city" maxlength="80" placeholder="Ciudad" aria-label="Ciudad">
+              <button class="btn" type="submit">Añadir</button>
+            </div>
+          </form>
+        </div>
+      </article>
+    </div>` : "";
 
-  el.innerHTML = `<div class="prof">
-    ${hero}
-    <nav class="pf-tabs" role="tablist">${tabs.map(([k, t]) => `<button role="tab" data-ptab="${k}" aria-selected="${tab === k}">${t}</button>`).join("")}</nav>
-    <div class="pf-body">${tab === "proximas" ? proximas : tab === "terminadas" ? terminadas : tab === "interesan" ? interesan : resumen}</div>
+  el.innerHTML = `<div class="prof ig">
+    ${head}
+    ${tabBar}
+    <div class="pf-body">${profTab === "proximas" ? rowList(up, false) : profTab === "interesan" ? rowList(fv, true) : profTab === "stats" ? stats : grid}</div>
+    ${modal}${addModal}
   </div>`;
 }
 
@@ -1833,6 +1931,7 @@ document.getElementById("timeline").addEventListener("input", e => {
   pop.querySelectorAll("li").forEach(li => { const b = li.querySelector("[data-s]"); if (b) li.hidden = !!q && !b.dataset.s.includes(q); });
 });
 document.addEventListener("click", e => { if (ddOpen && !e.target.closest(".dd")) { ddOpen = null; render(); } });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && (profPost || profAdd)) { profPost = null; profAdd = false; renderProfile(); } });
 document.getElementById("timeline").addEventListener("click", e => {
   const mt = e.target.closest("[data-month]");
   if (mt) { state.month = mt.dataset.month; ddOpen = null; Object.assign(state, { mcont: "", mcountry: "", mregion: "", mtype: "" });
@@ -2048,10 +2147,18 @@ prof.addEventListener("click", async e => {
   const t = e.target;
   const pt = t.closest("[data-ptab]");
   if (pt) { profTab = pt.dataset.ptab; renderProfile(); return; }
+  if (t.closest(".ig-post") && !t.closest("[data-closepost].ig-x")) { /* clic dentro de la publicación: no cerrar */ }
+  else if (t.closest("[data-closepost]")) { profPost = null; profAdd = false; renderProfile(); return; }
+  const pp = t.closest("[data-post]");
+  if (pp) { profPost = pp.dataset.post; profPhotoIdx = 0; renderProfile(); return; }
+  const ph = t.closest("[data-pphoto]");
+  if (ph) { profPhotoIdx = +ph.dataset.pphoto; renderProfile(); return; }
+  if (t.closest("[data-addpost]")) { profAdd = true; renderProfile(); return; }
+  if (t.closest("[data-editbio]")) { profEditBio = !profEditBio; renderProfile(); return; }
   const py = t.closest("[data-pyear]");
   if (py) { profYear = py.dataset.pyear; renderProfile(); return; }
   const po = t.closest("[data-open]");
-  if (po) { openRace(po.dataset.open); return; }
+  if (po) { profPost = null; profAdd = false; openRace(po.dataset.open); return; }
   if (t.closest("[data-back]")) { viewPerson = null; showView("corredores"); return; }
   if (t.matches("img[data-zoom]")) {
     const lb = document.createElement("div"); lb.className = "lightbox";
@@ -2063,7 +2170,7 @@ prof.addEventListener("click", async e => {
   const uf = t.closest("[data-unfav]");
   if (uf) { favs.delete(uf.dataset.unfav); saveFavs(); saveMe(d => { d.favs = [...favs]; }, true); renderAll(); return; }
   const rm = t.closest("[data-rm]");
-  if (rm) { saveMe(d => { delete d.races[rm.dataset.rm]; }); return; }
+  if (rm) { profPost = null; saveMe(d => { delete d.races[rm.dataset.rm]; }); return; }
   const mk = t.closest("[data-mark]");
   if (mk) { saveMe(d => { d.races[mk.dataset.id].status = mk.dataset.mark; }); return; }
   const rp = t.closest("[data-rmphoto]");
@@ -2076,11 +2183,13 @@ prof.addEventListener("click", async e => {
 prof.addEventListener("submit", e => {
   e.preventDefault();
   const f = e.target, fd = new FormData(f);
+  if (f.id === "bioForm") { const b = String(fd.get("bio") || "").trim().slice(0, 160); profEditBio = false; saveMe(d => { d.bio = b; }); toast("Perfil actualizado."); return; }
   if (f.id === "addPast") {
     const pick = String(fd.get("pick") || "").trim();
     const r = RACES.find(x => `${x.name} · ${fmt(x.date)}` === pick) || RACES.find(x => x.name.toLowerCase() === pick.toLowerCase());
     if (!r) { toast("Elige una carrera de la lista o añádela en el formulario de abajo."); return; }
     saveMe(d => { d.races[r.id] = { ...(d.races[r.id] || {}), ...raceSnapshot(r), status: "hecha" }; });
+    profAdd = false;
     toast(`${r.name} añadida a tus carreras terminadas.`);
     return;
   }
@@ -2089,6 +2198,7 @@ prof.addEventListener("submit", e => {
     if (!name || !date) return;
     const id = "propia-" + Date.now().toString(36);
     saveMe(d => { d.races[id] = { name, date, type: String(fd.get("type")), city: String(fd.get("city") || "").trim(), country: "", status: days(date) < 0 ? "hecha" : "voy", own: true }; });
+    profAdd = false;
     toast("Carrera añadida a tu perfil.");
     return;
   }
