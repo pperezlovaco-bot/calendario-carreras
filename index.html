@@ -780,6 +780,7 @@ footer p { margin: 0; }
   <footer>
     <p><span class="est">Fecha estimada</span> = aún no publicada por la organización; se calcula por el patrón de años anteriores. Comprueba siempre fechas y precios en la web oficial antes de inscribirte.</p>
     <p id="updated"></p>
+    <p>Localidades: <a href="https://www.geonames.org/" target="_blank" rel="noopener">GeoNames</a> (CC BY 4.0).</p>
   </footer>
 </div>
 
@@ -1818,11 +1819,27 @@ function trailBucket(r) {
 
 // Ciudad -> coordenadas: primero entre las ciudades del calendario, si no en OpenStreetMap.
 // Devuelve {lat, lon}, null si no existe, o undefined si no se pudo consultar.
+// Listado de localidades (GeoNames, CC BY 4.0): [[nombre, lat, lon, pa\u00eds], ...] ordenado por poblaci\u00f3n; se carga al primer uso
+let PLACES = null;
+async function loadPlaces() {
+  if (PLACES) return PLACES;
+  try { const res = await fetch("lugares.json"); PLACES = res.ok ? await res.json() : []; } catch { PLACES = []; }
+  return PLACES;
+}
 async function geocodeCity(q) {
-  const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-  const first = norm(q).split(/[\s,]/)[0];
-  const local = RACES.find(r => r.lat != null && (norm(r.city) === norm(q) || norm(r.city).split(/[\s,(]/)[0] === first));
+  const norm = s => String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9\u00f1 ]+/g, " ").replace(/\s+/g, " ").trim();
+  const nq = norm(q).replace(/^(o|a|os|as|el|la|los|las|l|es|sa) /, "");   // "O Porri\u00f1o" = "Porri\u00f1o"
+  if (!nq) return null;
+  const strip = s => norm(s).replace(/^(o|a|os|as|el|la|los|las|l|es|sa) /, "");
+  // 1. Ciudades con carreras (incluye nombres en espa\u00f1ol de ciudades extranjeras: Lisboa, Londres\u2026)
+  const local = RACES.find(r => r.lat != null && strip(r.city) === nq);
   if (local) return { lat: local.lat, lon: local.lon };
+  // 2. Listado de localidades: coincidencia exacta, despu\u00e9s que empiece por el texto
+  const places = await loadPlaces();
+  const hit = places.find(p => strip(p[0]) === nq) || places.find(p => strip(p[0]).startsWith(nq))
+    || RACES.find(r => r.lat != null && strip(r.city).startsWith(nq));
+  if (hit) return Array.isArray(hit) ? { lat: hit[1], lon: hit[2] } : { lat: hit.lat, lon: hit.lon };
+  // 3. OpenStreetMap (solo funciona en la web p\u00fablica; en Claude est\u00e1 bloqueado)
   try {
     const res = await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&accept-language=es&q=" + encodeURIComponent(q));
     const j = await res.json();
