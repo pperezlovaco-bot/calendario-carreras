@@ -703,6 +703,9 @@ li.has-sub .dd-opt b::after { content: " ›"; }
 .ig-addbox { grid-template-columns: 1fr; width: min(560px, 100%); }
 .ig-addbox .addrace { box-shadow: none; border: 0; border-radius: 0; }
 .ig .pf-body .prow { border-left: 4px solid var(--c); }
+.prow-open { cursor: pointer; transition: background .15s, transform .15s; }
+.prow-open:hover { background: color-mix(in srgb, var(--c, var(--run)) 7%, var(--surface)); transform: translateX(2px); }
+.prow-open:focus-visible { outline: 2px solid var(--c, var(--run)); outline-offset: 2px; }
 
 /* Calendario por meses */
 .months { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
@@ -945,7 +948,7 @@ const FORM = { "formUrl": "https://docs.google.com/forms/d/e/1FAIpQLSe1zRFH3sd6T
 const AVISO = /*AVISO*/null; // formulario de Google "Avísame" (aviso por correo) en la versión pública
 if (PUBLIC) document.documentElement.classList.add("public");
 if (PUBLIC && FORM) document.documentElement.classList.add("has-form");
-const UPDATED = "26/10/2026";
+const UPDATED = "28/10/2026";
 
 const MONTHS = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
 const MON = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
@@ -1208,7 +1211,7 @@ function renderProfile() {
     </div>
     ${!dn.length && !mine ? `<p class="hint">Aún no ha terminado ninguna carrera.</p>` : ""}`;
 
-  const rowList = (arr, isFav) => arr.length ? `<div class="plist">${arr.map(e => `<div class="prow" style="${colorOf(e)}">
+  const rowList = (arr, isFav) => arr.length ? `<div class="plist">${arr.map(e => `<div class="prow${RACE[e.id] ? " prow-open" : ""}" style="${colorOf(e)}"${RACE[e.id] ? ` data-open="${esc(e.id)}" role="button" tabindex="0" title="Ver la ficha de la carrera"` : ""}>
       <span class="d">${fmt(e.date)}</span>
       <span class="n"><b>${esc(e.name)}</b><span>${esc(e.type || "")} · ${esc(e.city || "")} · ${days(e.date) >= 0 ? inDays(days(e.date)) : "ya pasó"}</span></span>
       ${mine ? (isFav ? `<span class="row" style="display:flex;gap:6px"><button class="btn ghost" data-favgo="${esc(e.id)}">Voy</button><button class="btn ghost" data-unfav="${esc(e.id)}">Quitar ★</button></span>`
@@ -1350,7 +1353,7 @@ function renderRace() {
   const tips = [["💡", dt.tip], ["🥤", dt.aid], ["🎒", dt.bag], ["⭐", dt.highlight]].filter(([, v]) => v);
 
   el.innerHTML = `<div class="rd ${kindClass(r)}" style="${typeStyle(r)}">
-    <button class="back" data-back-cal>← Volver al calendario</button>
+    <button class="back" data-back-cal>← ${BACK_LABEL[raceFrom] || "Volver"}</button>
 
     <section class="rx-hero">
       <div class="rx-tags">
@@ -1813,7 +1816,10 @@ function ensureDetails(r) {
 }
 function openRace(id) {
   const r = RACE[id];
-  if (r && !r.summary) ensureDetails(r).then(() => { if (viewRace === id && !document.getElementById("view-carrera").hidden) renderRace(); }); viewRace = id; showView("carrera"); window.scrollTo(0, 0); }
+  if (r && !r.summary) ensureDetails(r).then(() => { if (viewRace === id && !document.getElementById("view-carrera").hidden) renderRace(); }); const from = ["inicio", "calendario", "corredores", "perfil"].find(n => !document.getElementById("view-" + n).hidden); if (from) raceFrom = from;
+  viewRace = id; showView("carrera"); window.scrollTo(0, 0); }
+let raceFrom = "calendario";
+const BACK_LABEL = { inicio: "Volver al inicio", calendario: "Volver al calendario", corredores: "Volver a corredores", perfil: "Volver al perfil" };
 
 function renderAll() {
   render();
@@ -2289,7 +2295,7 @@ document.getElementById("timeline").addEventListener("click", e => {
 document.getElementById("raceDetail").addEventListener("click", e => {
   const b = e.target.closest(".go-btn");
   if (b) { toggleGo(b); return; }
-  if (e.target.closest("[data-back-cal]")) { showView("calendario"); return; }
+  if (e.target.closest("[data-back-cal]")) { showView(raceFrom); return; }
   const ic = e.target.closest("[data-ics]");
   if (ic) { e.preventDefault(); downloadIcs(RACE[ic.dataset.ics]); return; }
   const o = e.target.closest("[data-open]");
@@ -2323,7 +2329,7 @@ prof.addEventListener("click", async e => {
   const py = t.closest("[data-pyear]");
   if (py) { profYear = py.dataset.pyear; renderProfile(); return; }
   const po = t.closest("[data-open]");
-  if (po) { profPost = null; profAdd = false; openRace(po.dataset.open); return; }
+  if (po && !t.closest("button:not([data-open]), a, input")) { profPost = null; profAdd = false; openRace(po.dataset.open); return; }
   if (t.closest("[data-back]")) { viewPerson = null; showView("corredores"); return; }
   if (t.matches("img[data-zoom]")) {
     const lb = document.createElement("div"); lb.className = "lightbox";
@@ -2344,6 +2350,10 @@ prof.addEventListener("click", async e => {
     await saveMe(d => { const e2 = d.races[rp.dataset.id]; e2.photos = (e2.photos || []).filter(x => x !== id); });
     try { await ME.assets?.delete(id); } catch {}
   }
+});
+prof.addEventListener("keydown", e => {
+  const po = e.target.closest(".prow[data-open]");
+  if (po && e.target === po && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); profPost = null; profAdd = false; openRace(po.dataset.open); }
 });
 prof.addEventListener("submit", e => {
   e.preventDefault();
